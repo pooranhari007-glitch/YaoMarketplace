@@ -1,10 +1,12 @@
-/** Demo data — replace with live API metrics in production */
+/** Demo content — swap for CMS / API in production */
 
 export const SITE = {
   name: "Harborview Estate",
   shortName: "Harborview",
-  tagline: "Stays & private events — book direct",
-  location: "Pacific Northwest",
+  tagline: "Where the forest meets the sea",
+  location: "Pacific Northwest Coast",
+  email: "hello@harborview.example",
+  phone: "(555) 234-8901",
 };
 
 export const PROPERTY = {
@@ -16,69 +18,54 @@ export const PROPERTY = {
   reviews: 84,
 };
 
-export const AVAILABILITY_FORECAST = [
-  { week: "W1", open: 72 },
-  { week: "W2", open: 65 },
-  { week: "W3", open: 58 },
-  { week: "W4", open: 81 },
-  { week: "W5", open: 74 },
-  { week: "W6", open: 69 },
-  { week: "W7", open: 55 },
-  { week: "W8", open: 88 },
-];
-
 export const PRICING_DEMO = {
   stayNightly: 250,
   eventFrom: 1500,
   depositPercent: 50,
+  minStay: 2,
 };
 
-export const STATS = {
-  occupancyRate: 78,
-  occupancyChange: 12,
-  monthlyRevenue: 18400,
-  revenueChange: 8.4,
-  upcomingBookings: 14,
-  pendingInquiries: 3,
-  avgStayLength: 2.4,
-  eventBookings: 6,
+export const HERO = {
+  headline: "Your private escape on six acres of coastal woodland",
+  subline: "Overnight stays for families and friends. Private events for weddings, retreats, and celebrations — all booked direct with no platform fees.",
 };
 
-export const OCCUPANCY_CHART = [
-  { month: "Jan", stays: 62, events: 28 },
-  { month: "Feb", stays: 58, events: 35 },
-  { month: "Mar", stays: 71, events: 42 },
-  { month: "Apr", stays: 75, events: 38 },
-  { month: "May", stays: 82, events: 55 },
-  { month: "Jun", stays: 88, events: 48 },
-  { month: "Jul", stays: 91, events: 62 },
-];
-
-export const REVENUE_CHART = [
-  { month: "Jan", revenue: 9200 },
-  { month: "Feb", revenue: 8400 },
-  { month: "Mar", revenue: 11200 },
-  { month: "Apr", revenue: 12800 },
-  { month: "May", revenue: 15600 },
-  { month: "Jun", revenue: 17200 },
-  { month: "Jul", revenue: 18400 },
-];
-
-export const BOOKING_MIX = [
-  { name: "Stays", value: 68, color: "#6366f1" },
-  { name: "Events", value: 32, color: "#22d3ee" },
+export const HIGHLIGHTS = [
+  { title: "Sleeps 10", desc: "Four ensuite suites with forest & water views" },
+  { title: "120 guests", desc: "Indoor-outdoor event spaces with full catering prep" },
+  { title: "6 acres", desc: "Trails, fire pit, meadow & private shoreline access" },
+  { title: "4.97 ★", desc: "84 verified guest reviews" },
 ];
 
 export const AMENITIES_STAY = [
-  "Private suites & ensuite baths",
-  "Chef-ready kitchen",
-  "High-speed Wi‑Fi",
+  "Private suites with ensuite baths",
+  "Chef-ready kitchen & dining for 12",
+  "High-speed Wi‑Fi throughout",
   "Contactless check-in",
+  "Fire pit & outdoor dining",
+  "Trail access to shoreline",
 ];
 
 export const EVENT_TYPES = [
-  { title: "Weddings", bookings: 12, capacity: 80 },
-  { title: "Corporate", bookings: 8, capacity: 40 },
-  { title: "Celebrations", bookings: 15, capacity: 60 },
-  { title: "Retreats", bookings: 6, capacity: 24 },
+  { title: "Weddings", desc: "Ceremony meadow, reception barn, overnight guest suites", capacity: 80 },
+  { title: "Corporate retreats", desc: "Breakout spaces, A/V setup, team dining", capacity: 40 },
+  { title: "Celebrations", desc: "Birthdays, reunions, milestone gatherings", capacity: 60 },
+  { title: "Wellness retreats", desc: "Yoga lawn, quiet rooms, nature immersion", capacity: 24 },
+];
+
+export const GALLERY = [
+  { title: "Main residence", tone: "linear-gradient(135deg, #3d5a4c 0%, #6b8f7a 100%)" },
+  { title: "Event meadow", tone: "linear-gradient(135deg, #7a9e6a 0%, #c4d4a8 100%)" },
+  { title: "Coastal trail", tone: "linear-gradient(135deg, #4a6670 0%, #8fb4c4 100%)" },
+  { title: "Suite interior", tone: "linear-gradient(135deg, #8b7355 0%, #d4c4a8 100%)" },
+  { title: "Fire pit evenings", tone: "linear-gradient(135deg, #5c4033 0%, #c4714a 100%)" },
+  { title: "Dining room", tone: "linear-gradient(135deg, #6b5b4f 0%, #e8ddd0 100%)" },
+];
+
+export const TRUST = [
+  "Book direct — save platform fees",
+  "Instant confirmation",
+  "Secure Stripe checkout",
+  "Calendar synced with Airbnb & VRBO",
+  "COI workflow for events",
 ];

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Panel, StatCard } from "../components/DashboardCharts";
 import { api } from "../api/client";
 import { PRICING_DEMO } from "../data/demo";
 import type { BookingType, CheckoutResult, Quote } from "../types";
@@ -59,7 +58,7 @@ export default function BookPage() {
     setError("");
     try {
       const result = await api<CheckoutResult>(
-        `/bookings?success_url=${encodeURIComponent(window.location.origin + "/book/success")}&cancel_url=${encodeURIComponent(window.location.origin + "/book")}`,
+        `/bookings?success_url=${encodeURIComponent(window.location.origin + import.meta.env.BASE_URL.replace(/\/$/, "") + "/book/success")}&cancel_url=${encodeURIComponent(window.location.origin + import.meta.env.BASE_URL.replace(/\/$/, "") + "/book")}`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -96,38 +95,41 @@ export default function BookPage() {
     }
   }
 
+  const stepNum = step === "dates" ? 1 : step === "guest" ? 2 : 3;
+
   return (
-    <div className="book-dash">
-      <div className="book-dash-stats">
-        <StatCard label="Type" value={bookingType === "stay" ? "Stay" : "Event"} icon="◆" />
-        <StatCard
-          label="Quote"
-          value={quote ? `$${quote.total_amount}` : "—"}
-          icon="💵"
-        />
-        <StatCard
-          label="Deposit"
-          value={quote ? `$${quote.deposit_amount}` : `${PRICING_DEMO.depositPercent}%`}
-          icon="🔒"
-        />
+    <div className="container book-page">
+      <section className="page-hero">
+        <span className="eyebrow">Reserve</span>
+        <h1>Book your dates</h1>
+        <p>Instant quote, secure deposit, confirmation by email. No platform fees.</p>
+      </section>
+
+      <div className="book-steps">
+        {[1, 2, 3].map((n) => (
+          <div key={n} className={`book-step ${stepNum >= n ? "done" : ""} ${stepNum === n ? "active" : ""}`}>
+            <span>{n}</span>
+            {n === 1 ? "Dates" : n === 2 ? "Details" : "Insurance"}
+          </div>
+        ))}
       </div>
 
-      <div className="book-dash-grid">
-        <Panel title="Booking wizard" subtitle={`Step ${step === "dates" ? 1 : step === "guest" ? 2 : 3} of 3`}>
+      <div className="book-layout">
+        <div className="book-form card">
           <div className="type-tabs">
-            <button type="button" className={bookingType === "stay" ? "on" : ""} onClick={() => { setBookingType("stay"); setQuote(null); setStep("dates"); }}>Stay</button>
-            <button type="button" className={bookingType === "event" ? "on" : ""} onClick={() => { setBookingType("event"); setQuote(null); setStep("dates"); }}>Event</button>
+            <button type="button" className={bookingType === "stay" ? "on" : ""} onClick={() => { setBookingType("stay"); setQuote(null); setStep("dates"); }}>Overnight stay</button>
+            <button type="button" className={bookingType === "event" ? "on" : ""} onClick={() => { setBookingType("event"); setQuote(null); setStep("dates"); }}>Private event</button>
           </div>
 
           {step === "dates" && (
             <>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Start</label>
+                  <label>{bookingType === "stay" ? "Check-in" : "Start date"}</label>
                   <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>End</label>
+                  <label>{bookingType === "stay" ? "Check-out" : "End date"}</label>
                   <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
                 </div>
               </div>
@@ -136,21 +138,21 @@ export default function BookPage() {
                 <input type="number" min={1} value={guestCount} onChange={(e) => setGuestCount(Number(e.target.value))} />
               </div>
               {error && <p className="err">{error}</p>}
-              <button type="button" className="btn btn-primary" onClick={fetchQuote}>Get quote →</button>
+              <button type="button" className="btn btn-primary" onClick={fetchQuote}>Get instant quote</button>
             </>
           )}
 
           {step === "guest" && quote && (
             <>
-              <div className="form-group"><label>Name</label><input value={guestName} onChange={(e) => setGuestName(e.target.value)} /></div>
+              <div className="form-group"><label>Full name</label><input value={guestName} onChange={(e) => setGuestName(e.target.value)} /></div>
               <div className="form-group"><label>Email</label><input type="email" value={guestEmail} onChange={(e) => setGuestEmail(e.target.value)} /></div>
               <div className="form-group"><label>Phone</label><input value={guestPhone} onChange={(e) => setGuestPhone(e.target.value)} /></div>
-              <div className="form-group"><label>Notes</label><textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} /></div>
+              <div className="form-group"><label>Notes (optional)</label><textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} placeholder="Arrival time, special requests…" /></div>
               <div className="btn-row">
                 <button type="button" className="btn btn-ghost" onClick={() => setStep("dates")}>Back</button>
-                {bookingType === "event" && <button type="button" className="btn btn-ghost" onClick={() => setStep("insurance")}>COI</button>}
-                <button type="button" className="btn btn-primary" disabled={loading || !guestName || !guestEmail} onClick={submitBooking}>
-                  {loading ? "…" : `Pay $${quote.deposit_amount}`}
+                {bookingType === "event" && <button type="button" className="btn btn-ghost" onClick={() => setStep("insurance")}>Upload COI</button>}
+                <button type="button" className="btn btn-accent" disabled={loading || !guestName || !guestEmail} onClick={submitBooking}>
+                  {loading ? "Processing…" : `Pay $${quote.deposit_amount} deposit`}
                 </button>
               </div>
               {error && <p className="err">{error}</p>}
@@ -159,81 +161,123 @@ export default function BookPage() {
 
           {step === "insurance" && (
             <>
-              <p className="hint">Upload Certificate of Insurance (PDF)</p>
+              <p className="hint">Upload your Certificate of Insurance (PDF or image). Required for all events.</p>
               <div className="form-group">
                 <input type="file" accept=".pdf,.png,.jpg" onChange={(e) => setCoiFile(e.target.files?.[0] || null)} />
               </div>
-              <button type="button" className="btn btn-primary" onClick={() => setStep("guest")}>Back</button>
+              <button type="button" className="btn btn-primary" onClick={() => setStep("guest")}>Continue</button>
             </>
           )}
-        </Panel>
+        </div>
 
-        <Panel title="Quote breakdown" subtitle="Live pricing">
+        <aside className="book-summary card">
+          <h3>Your quote</h3>
           {quote ? (
-            <div className="quote-lines">
-              <div className="ql"><span>Subtotal</span><strong>${quote.total_amount}</strong></div>
-              <div className="ql accent"><span>Deposit now</span><strong>${quote.deposit_amount}</strong></div>
-              {bookingType === "stay" && <div className="ql dim"><span>Nights</span><strong>{quote.nights}</strong></div>}
-            </div>
+            <>
+              <div className="quote-line"><span>Total</span><strong>${quote.total_amount}</strong></div>
+              <div className="quote-line accent"><span>Deposit today</span><strong>${quote.deposit_amount}</strong></div>
+              {bookingType === "stay" && quote.nights && (
+                <div className="quote-line dim"><span>{quote.nights} nights</span><span>${PRICING_DEMO.stayNightly}/night</span></div>
+              )}
+              <p className="quote-note">{PRICING_DEMO.depositPercent}% deposit due now. Balance before arrival.</p>
+            </>
           ) : (
-            <p className="hint">Select dates to generate a live quote from the API.</p>
+            <p className="hint">Select your dates to see live pricing.</p>
           )}
-        </Panel>
+        </aside>
       </div>
 
       <style>{`
-        .book-dash-stats {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1rem;
-          margin-bottom: 1.25rem;
+        .book-page { padding-bottom: 4rem; }
+        .book-steps {
+          display: flex;
+          gap: 0.5rem;
+          margin-bottom: 2rem;
         }
-        .book-dash-grid {
+        .book-step {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1rem;
+          background: var(--surface-muted);
+          border-radius: var(--radius);
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: var(--text-muted);
+        }
+        .book-step span {
+          width: 24px;
+          height: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          background: var(--border);
+          font-size: 0.75rem;
+        }
+        .book-step.active {
+          background: var(--forest);
+          color: #fff;
+        }
+        .book-step.active span { background: rgba(255,255,255,0.2); }
+        .book-step.done { color: var(--forest); }
+        .book-step.done span { background: var(--forest); color: #fff; }
+        .book-layout {
           display: grid;
           grid-template-columns: 1.2fr 0.8fr;
-          gap: 1rem;
+          gap: 1.5rem;
+          align-items: start;
         }
         .type-tabs {
           display: flex;
           gap: 0.5rem;
-          margin-bottom: 1.25rem;
+          margin-bottom: 1.5rem;
         }
         .type-tabs button {
           flex: 1;
-          padding: 0.5rem;
-          border-radius: 8px;
-          border: 1px solid var(--border);
-          background: var(--bg-panel);
-          color: var(--muted);
-          font-size: 0.82rem;
+          padding: 0.65rem;
+          border-radius: var(--radius);
+          border: 1.5px solid var(--border);
+          background: var(--surface);
+          color: var(--text-soft);
+          font-size: 0.85rem;
           font-weight: 600;
           cursor: pointer;
+          transition: border-color 0.15s, background 0.15s;
         }
         .type-tabs button.on {
-          background: rgba(99,102,241,0.2);
-          border-color: var(--primary);
-          color: var(--primary-hover);
+          border-color: var(--forest);
+          background: rgba(44, 74, 62, 0.08);
+          color: var(--forest);
         }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .btn-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
-        .err { color: var(--red); font-size: 0.82rem; margin: 0.5rem 0; }
-        .hint { font-size: 0.82rem; color: var(--dim); margin-bottom: 1rem; }
-        .quote-lines { display: grid; gap: 0.75rem; }
-        .ql {
+        .err { color: var(--red); font-size: 0.85rem; margin: 0.75rem 0; }
+        .hint { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+        .book-summary h3 {
+          font-family: var(--font-display);
+          font-size: 1.25rem;
+          margin-bottom: 1.25rem;
+        }
+        .quote-line {
           display: flex;
           justify-content: space-between;
-          padding: 0.65rem 0.75rem;
-          background: var(--bg-panel);
-          border-radius: 8px;
-          font-size: 0.85rem;
-          color: var(--muted);
+          padding: 0.75rem 0;
+          border-bottom: 1px solid var(--border);
+          font-size: 0.92rem;
+          color: var(--text-soft);
         }
-        .ql strong { color: var(--text); font-size: 1.1rem; }
-        .ql.accent strong { color: var(--cyan); }
-        .ql.dim strong { color: var(--dim); font-size: 0.9rem; }
+        .quote-line strong { font-size: 1.15rem; color: var(--text); }
+        .quote-line.accent strong { color: var(--accent); font-size: 1.35rem; }
+        .quote-line.dim { font-size: 0.82rem; border-bottom: none; }
+        .quote-note {
+          margin-top: 1rem;
+          font-size: 0.78rem;
+          color: var(--text-muted);
+        }
         @media (max-width: 800px) {
-          .book-dash-stats, .book-dash-grid { grid-template-columns: 1fr; }
-          .form-row { grid-template-columns: 1fr; }
+          .book-layout, .form-row { grid-template-columns: 1fr; }
         }
       `}</style>
     </div>

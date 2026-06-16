@@ -3,180 +3,167 @@ import ChatWidget from "./ChatWidget";
 import { SITE } from "../data/demo";
 
 const nav = [
-  { to: "/", label: "Home", icon: "▦" },
-  { to: "/stay", label: "Stay", icon: "⌂" },
-  { to: "/events", label: "Events", icon: "◈" },
-  { to: "/book", label: "Book", icon: "＋" },
-  { to: "/gallery", label: "Gallery", icon: "▣" },
-  { to: "/policies", label: "Policies", icon: "≡" },
-  { to: "/faq", label: "FAQ", icon: "?" },
+  { to: "/", label: "Home" },
+  { to: "/stay", label: "Stay" },
+  { to: "/events", label: "Events" },
+  { to: "/gallery", label: "Gallery" },
+  { to: "/faq", label: "FAQ" },
 ];
 
 export default function Layout() {
   const { pathname } = useLocation();
+  const isHome = pathname === "/";
 
   return (
-    <div className="dash-shell">
-      <aside className="dash-sidebar">
-        <Link to="/" className="dash-brand">
-          <span className="dash-brand-icon">◆</span>
-          <div>
-            <strong>{SITE.shortName}</strong>
-            <small>Book direct</small>
-          </div>
-        </Link>
-        <nav className="dash-side-nav">
-          {nav.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              className={pathname === item.to ? "active" : ""}
-            >
-              <span className="nav-icon">{item.icon}</span>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="dash-side-footer">
-          <Link to="/book" className="btn btn-primary" style={{ width: "100%" }}>
-            Book now
+    <div className="site">
+      <header className={`site-header ${isHome ? "site-header--hero" : ""}`}>
+        <div className="container site-header-inner">
+          <Link to="/" className="site-logo">
+            <span className="site-logo-mark">H</span>
+            <span>{SITE.shortName}</span>
           </Link>
+          <nav className="site-nav">
+            {nav.map((item) => (
+              <Link key={item.to} to={item.to} className={pathname === item.to ? "active" : ""}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+          <Link to="/book" className="btn btn-primary site-cta">Reserve</Link>
         </div>
-      </aside>
+      </header>
 
-      <div className="dash-main-wrap">
-        <header className="dash-topbar">
+      <main>
+        <Outlet />
+      </main>
+
+      <footer className="site-footer">
+        <div className="container site-footer-grid">
           <div>
-            <h1 className="dash-page-title">{SITE.name}</h1>
-            <p className="dash-page-sub">{SITE.tagline}</p>
+            <strong className="site-footer-brand">{SITE.name}</strong>
+            <p>{SITE.location}</p>
+            <p className="site-footer-contact">{SITE.email} · {SITE.phone}</p>
           </div>
-          <div className="dash-topbar-actions">
-            <span className="dash-live">
-              <span className="dash-live-dot" /> Live
-            </span>
-            <Link to="/book?type=stay" className="btn btn-ghost">Book stay</Link>
-            <Link to="/book?type=event" className="btn btn-cyan">Book event</Link>
+          <div className="site-footer-links">
+            <Link to="/stay">Overnight stays</Link>
+            <Link to="/events">Private events</Link>
+            <Link to="/book">Book direct</Link>
+            <Link to="/policies">Policies</Link>
           </div>
-        </header>
-        <main className="dash-main">
-          <Outlet />
-        </main>
-      </div>
+        </div>
+        <div className="container site-footer-bottom">
+          <span>© {new Date().getFullYear()} {SITE.name}</span>
+          <span>No platform fees · Direct booking only</span>
+        </div>
+      </footer>
+
       <ChatWidget />
+
       <style>{`
-        .dash-shell {
-          display: flex;
-          min-height: 100vh;
-        }
-        .dash-sidebar {
-          width: 220px;
-          flex-shrink: 0;
-          background: var(--bg-panel);
-          border-right: 1px solid var(--border);
-          display: flex;
-          flex-direction: column;
-          padding: 1rem 0.75rem;
-          position: fixed;
+        .site { min-height: 100vh; display: flex; flex-direction: column; }
+        .site-header {
+          position: sticky;
           top: 0;
-          bottom: 0;
-          left: 0;
-          z-index: 100;
+          z-index: 200;
+          background: rgba(250, 247, 242, 0.92);
+          backdrop-filter: blur(12px);
+          border-bottom: 1px solid var(--border);
         }
-        .dash-brand {
+        .site-header--hero {
+          position: absolute;
+          left: 0; right: 0;
+          background: transparent;
+          border-bottom: none;
+        }
+        .site-header--hero .site-nav a { color: rgba(255,255,255,0.85); }
+        .site-header--hero .site-nav a:hover,
+        .site-header--hero .site-nav a.active { color: #fff; }
+        .site-header--hero .site-logo { color: #fff; }
+        .site-header--hero .site-logo-mark { background: rgba(255,255,255,0.15); color: #fff; }
+        .site-header-inner {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1.5rem;
+          padding: 1rem 0;
+        }
+        .site-logo {
           display: flex;
           align-items: center;
           gap: 0.65rem;
-          padding: 0.5rem 0.75rem 1.25rem;
+          font-family: var(--font-display);
+          font-size: 1.15rem;
+          font-weight: 500;
           color: var(--text);
-          border-bottom: 1px solid var(--border);
-          margin-bottom: 0.75rem;
         }
-        .dash-brand-icon {
-          width: 32px;
-          height: 32px;
+        .site-logo-mark {
+          width: 36px;
+          height: 36px;
           display: flex;
           align-items: center;
           justify-content: center;
-          background: var(--primary);
-          border-radius: 8px;
-          font-size: 0.85rem;
-          color: white;
+          background: var(--forest);
+          color: #fff;
+          border-radius: 50%;
+          font-size: 0.95rem;
         }
-        .dash-brand strong { display: block; font-size: 0.9rem; }
-        .dash-brand small { font-size: 0.68rem; color: var(--dim); }
-        .dash-side-nav {
+        .site-nav {
           display: flex;
-          flex-direction: column;
-          gap: 0.15rem;
-          flex: 1;
+          gap: 1.75rem;
         }
-        .dash-side-nav a {
-          display: flex;
-          align-items: center;
-          gap: 0.6rem;
-          padding: 0.55rem 0.75rem;
-          border-radius: 8px;
-          font-size: 0.82rem;
+        .site-nav a {
+          font-size: 0.88rem;
           font-weight: 500;
-          color: var(--muted);
-          transition: background 0.15s, color 0.15s;
+          color: var(--text-soft);
+          transition: color 0.15s;
         }
-        .dash-side-nav a:hover { background: var(--surface); color: var(--text); }
-        .dash-side-nav a.active {
-          background: rgba(99, 102, 241, 0.15);
-          color: var(--primary-hover);
+        .site-nav a:hover,
+        .site-nav a.active { color: var(--forest); }
+        .site-cta { padding: 0.6rem 1.25rem; font-size: 0.82rem; }
+        .site-footer {
+          margin-top: auto;
+          background: var(--forest);
+          color: rgba(255,255,255,0.85);
+          padding: 3rem 0 0;
         }
-        .nav-icon { font-size: 0.75rem; opacity: 0.8; width: 1rem; text-align: center; }
-        .dash-side-footer { padding-top: 0.75rem; border-top: 1px solid var(--border); }
-        .dash-main-wrap {
-          flex: 1;
-          margin-left: 220px;
+        .site-footer-grid {
+          display: grid;
+          grid-template-columns: 1.2fr 1fr;
+          gap: 2rem;
+          padding-bottom: 2rem;
+          border-bottom: 1px solid rgba(255,255,255,0.12);
+        }
+        .site-footer-brand {
+          display: block;
+          font-family: var(--font-display);
+          font-size: 1.35rem;
+          color: #fff;
+          margin-bottom: 0.5rem;
+        }
+        .site-footer p { font-size: 0.9rem; opacity: 0.8; }
+        .site-footer-contact { margin-top: 0.75rem; font-size: 0.82rem !important; }
+        .site-footer-links {
           display: flex;
           flex-direction: column;
-          min-width: 0;
+          gap: 0.5rem;
         }
-        .dash-topbar {
+        .site-footer-links a {
+          color: rgba(255,255,255,0.75);
+          font-size: 0.88rem;
+        }
+        .site-footer-links a:hover { color: #fff; }
+        .site-footer-bottom {
           display: flex;
           justify-content: space-between;
-          align-items: center;
-          padding: 1.25rem 1.5rem;
-          border-bottom: 1px solid var(--border);
-          background: var(--bg-panel);
           flex-wrap: wrap;
-          gap: 1rem;
-        }
-        .dash-page-title { font-size: 1.15rem; font-weight: 600; }
-        .dash-page-sub { font-size: 0.78rem; color: var(--dim); margin-top: 0.15rem; }
-        .dash-topbar-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-        .dash-live {
-          display: flex;
-          align-items: center;
-          gap: 0.4rem;
-          font-size: 0.72rem;
-          color: var(--green);
-          font-weight: 600;
-          padding: 0.35rem 0.65rem;
-          background: rgba(52, 211, 153, 0.1);
-          border-radius: 999px;
-        }
-        .dash-live-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: var(--green);
-          animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
-        .dash-main {
-          padding: 1.5rem;
-          flex: 1;
+          gap: 0.5rem;
+          padding: 1.25rem 0;
+          font-size: 0.78rem;
+          opacity: 0.6;
         }
         @media (max-width: 768px) {
-          .dash-sidebar { display: none; }
-          .dash-main-wrap { margin-left: 0; }
+          .site-nav { display: none; }
+          .site-footer-grid { grid-template-columns: 1fr; }
         }
       `}</style>
     </div>

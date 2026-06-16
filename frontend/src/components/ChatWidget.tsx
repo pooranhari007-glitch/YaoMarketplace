@@ -21,52 +21,101 @@ export default function ChatWidget() {
       });
       setMessages([...next, { role: "assistant", content: res.reply }]);
     } catch {
-      setMessages([...next, { role: "assistant", content: "Unavailable right now. Try again." }]);
+      setMessages([...next, { role: "assistant", content: "Unavailable right now. Try again or email us directly." }]);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className={`dash-chat ${open ? "open" : ""}`}>
+    <div className={`site-chat ${open ? "open" : ""}`}>
       {open && (
-        <div className="dash-chat-panel card">
-          <div className="dash-chat-head">
-            <span>AI Assistant</span>
-            <button type="button" onClick={() => setOpen(false)}>×</button>
+        <div className="site-chat-panel card">
+          <div className="site-chat-head">
+            <span>Concierge</span>
+            <button type="button" onClick={() => setOpen(false)} aria-label="Close">×</button>
           </div>
-          <div className="dash-chat-msgs">
-            {messages.length === 0 && <p className="empty">Ask about stays, events, or booking.</p>}
+          <div className="site-chat-msgs">
+            {messages.length === 0 && (
+              <p className="empty">Ask about stays, events, amenities, or booking.</p>
+            )}
             {messages.map((m, i) => (
               <div key={i} className={`msg ${m.role}`}>{m.content}</div>
             ))}
           </div>
-          <div className="dash-chat-foot">
-            <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="Message…" disabled={loading} />
+          <div className="site-chat-foot">
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && send()}
+              placeholder="Ask a question…"
+              disabled={loading}
+            />
             <button type="button" className="btn btn-primary" onClick={send} disabled={loading}>Send</button>
           </div>
         </div>
       )}
-      <button type="button" className="btn btn-primary dash-chat-btn" onClick={() => setOpen(!open)}>
-        {open ? "Close" : "AI Chat"}
+      <button type="button" className="btn btn-primary site-chat-btn" onClick={() => setOpen(!open)}>
+        {open ? "Close" : "Ask us anything"}
       </button>
       <style>{`
-        .dash-chat { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 300; }
-        .dash-chat-panel { width: min(320px, calc(100vw - 2rem)); margin-bottom: 0.5rem; padding: 0; overflow: hidden; }
-        .dash-chat-head {
-          display: flex; justify-content: space-between; align-items: center;
-          padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
-          font-size: 0.8rem; font-weight: 600;
+        .site-chat { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 300; }
+        .site-chat-panel {
+          width: min(340px, calc(100vw - 2rem));
+          margin-bottom: 0.75rem;
+          padding: 0;
+          overflow: hidden;
         }
-        .dash-chat-head button { background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; }
-        .dash-chat-msgs { height: 220px; overflow-y: auto; padding: 0.75rem; }
-        .empty { font-size: 0.8rem; color: var(--dim); }
-        .msg { font-size: 0.82rem; margin-bottom: 0.5rem; padding: 0.5rem 0.65rem; border-radius: 8px; }
-        .msg.user { background: rgba(99,102,241,0.2); margin-left: 1rem; }
-        .msg.assistant { background: var(--bg-panel); color: var(--muted); }
-        .dash-chat-foot { display: flex; gap: 0.4rem; padding: 0.6rem; border-top: 1px solid var(--border); }
-        .dash-chat-foot input { flex: 1; font-size: 0.8rem; }
-        .dash-chat-btn { font-size: 0.75rem; }
+        .site-chat-head {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.85rem 1.15rem;
+          border-bottom: 1px solid var(--border);
+          font-family: var(--font-display);
+          font-size: 1rem;
+        }
+        .site-chat-head button {
+          background: none;
+          border: none;
+          color: var(--text-muted);
+          font-size: 1.4rem;
+          cursor: pointer;
+          line-height: 1;
+        }
+        .site-chat-msgs {
+          height: 240px;
+          overflow-y: auto;
+          padding: 1rem;
+        }
+        .empty { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+        .msg {
+          font-size: 0.88rem;
+          margin-bottom: 0.6rem;
+          padding: 0.6rem 0.85rem;
+          border-radius: 12px;
+          line-height: 1.5;
+        }
+        .msg.user {
+          background: var(--forest);
+          color: #fff;
+          margin-left: 1.5rem;
+          border-bottom-right-radius: 4px;
+        }
+        .msg.assistant {
+          background: var(--surface-muted);
+          color: var(--text-soft);
+          margin-right: 1.5rem;
+          border-bottom-left-radius: 4px;
+        }
+        .site-chat-foot {
+          display: flex;
+          gap: 0.5rem;
+          padding: 0.75rem;
+          border-top: 1px solid var(--border);
+        }
+        .site-chat-foot input { flex: 1; font-size: 0.85rem; }
+        .site-chat-btn { font-size: 0.82rem; box-shadow: var(--shadow); }
       `}</style>
     </div>
   );

@@ -29,7 +29,7 @@ export default function LiveQuoteWidget({ defaultType = "stay" }: { defaultType?
       });
       setQuote(q);
     } catch {
-      setError("Could not fetch live quote. Try again.");
+      setError("Could not fetch quote. Try again.");
     } finally {
       setLoading(false);
     }
@@ -38,25 +38,22 @@ export default function LiveQuoteWidget({ defaultType = "stay" }: { defaultType?
   const bookUrl = `/book?type=${type}&start=${start}&end=${end}&guests=${guests}`;
 
   return (
-    <div className="live-quote card">
-      <div className="lq-head">
-        <div>
-          <span className="eyebrow">Live calculator</span>
-          <h3>Instant pricing</h3>
-        </div>
-        <div className="lq-tabs">
+    <div className="booking-widget card">
+      <div className="bw-head">
+        <h3>Check availability</h3>
+        <div className="bw-tabs">
           <button type="button" className={type === "stay" ? "on" : ""} onClick={() => { setType("stay"); setQuote(null); }}>Stay</button>
           <button type="button" className={type === "event" ? "on" : ""} onClick={() => { setType("event"); setQuote(null); }}>Event</button>
         </div>
       </div>
 
-      <div className="lq-fields">
+      <div className="bw-fields">
         <div className="form-group">
-          <label>Check-in / Start</label>
+          <label>{type === "stay" ? "Check-in" : "Start"}</label>
           <input type="date" value={start} onChange={(e) => { setStart(e.target.value); setQuote(null); }} />
         </div>
         <div className="form-group">
-          <label>Check-out / End</label>
+          <label>{type === "stay" ? "Check-out" : "End"}</label>
           <input type="date" value={end} onChange={(e) => { setEnd(e.target.value); setQuote(null); }} />
         </div>
         <div className="form-group">
@@ -65,90 +62,84 @@ export default function LiveQuoteWidget({ defaultType = "stay" }: { defaultType?
         </div>
       </div>
 
-      <button type="button" className="btn btn-primary lq-calc" onClick={calculate} disabled={loading || !start || !end}>
-        {loading ? "Calculating…" : "Calculate price"}
+      <button type="button" className="btn btn-primary bw-calc" onClick={calculate} disabled={loading || !start || !end}>
+        {loading ? "Calculating…" : "Get instant quote"}
       </button>
 
-      {error && <p className="lq-error">{error}</p>}
+      {error && <p className="bw-error">{error}</p>}
 
-      {quote && (
-        <div className="lq-result">
-          <div className="lq-row">
+      {quote ? (
+        <div className="bw-result">
+          <div className="bw-row">
             <span>Total</span>
             <strong>${quote.total_amount}</strong>
           </div>
-          <div className="lq-row highlight">
+          <div className="bw-row accent">
             <span>Deposit today</span>
             <strong>${quote.deposit_amount}</strong>
           </div>
-          {type === "stay" && <p className="lq-meta">{quote.nights} nights · ${PRICING_DEMO.stayNightly}/night base</p>}
-          <Link to={bookUrl} className="btn btn-cyan" style={{ width: "100%", marginTop: "0.75rem" }}>
-            Continue to book →
+          {type === "stay" && quote.nights && (
+            <p className="bw-meta">{quote.nights} nights · ${PRICING_DEMO.stayNightly}/night</p>
+          )}
+          <Link to={bookUrl} className="btn btn-accent" style={{ width: "100%", marginTop: "0.75rem" }}>
+            Continue to book
           </Link>
         </div>
-      )}
-
-      {!quote && !error && (
-        <p className="lq-hint">From ${PRICING_DEMO.stayNightly}/night · Events from ${PRICING_DEMO.eventFrom}</p>
+      ) : (
+        <p className="bw-hint">From ${PRICING_DEMO.stayNightly}/night · Events from ${PRICING_DEMO.eventFrom.toLocaleString()}</p>
       )}
 
       <style>{`
-        .live-quote { padding: 0; overflow: hidden; }
-        .lq-head {
+        .booking-widget {
+          padding: 1.5rem;
+          box-shadow: var(--shadow-lg);
+        }
+        .bw-head {
           display: flex;
           justify-content: space-between;
-          align-items: flex-start;
-          padding: 1.25rem;
-          border-bottom: 1px solid var(--border);
+          align-items: center;
+          margin-bottom: 1.25rem;
           gap: 1rem;
-          flex-wrap: wrap;
         }
-        .lq-head h3 { font-size: 1rem; margin-top: 0.25rem; }
-        .lq-tabs { display: flex; gap: 0.35rem; }
-        .lq-tabs button {
-          padding: 0.4rem 0.85rem;
-          border-radius: 6px;
+        .bw-head h3 {
+          font-family: var(--font-display);
+          font-size: 1.25rem;
+        }
+        .bw-tabs { display: flex; gap: 0.35rem; }
+        .bw-tabs button {
+          padding: 0.35rem 0.75rem;
+          border-radius: 999px;
           border: 1px solid var(--border);
-          background: var(--bg-panel);
-          color: var(--muted);
-          font-size: 0.75rem;
+          background: var(--surface-muted);
+          color: var(--text-muted);
+          font-size: 0.78rem;
           font-weight: 600;
           cursor: pointer;
         }
-        .lq-tabs button.on {
-          background: rgba(99,102,241,0.2);
-          border-color: var(--primary);
-          color: var(--primary-hover);
+        .bw-tabs button.on {
+          background: var(--forest);
+          border-color: var(--forest);
+          color: #fff;
         }
-        .lq-fields {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1rem;
-          padding: 1.25rem;
+        .bw-fields { display: grid; gap: 0.75rem; margin-bottom: 1rem; }
+        .bw-calc { width: 100%; }
+        .bw-error { color: var(--red); font-size: 0.82rem; margin-top: 0.5rem; }
+        .bw-result {
+          margin-top: 1.25rem;
+          padding-top: 1.25rem;
+          border-top: 1px solid var(--border);
         }
-        .lq-calc { margin: 0 1.25rem; width: calc(100% - 2.5rem); }
-        .lq-error { color: var(--red); font-size: 0.8rem; padding: 0.5rem 1.25rem; }
-        .lq-result {
-          margin: 1rem 1.25rem 1.25rem;
-          padding: 1rem;
-          background: var(--bg-panel);
-          border-radius: 8px;
-          border: 1px solid var(--border);
-        }
-        .lq-row {
+        .bw-row {
           display: flex;
           justify-content: space-between;
-          font-size: 0.85rem;
-          color: var(--muted);
+          font-size: 0.88rem;
+          color: var(--text-soft);
           margin-bottom: 0.5rem;
         }
-        .lq-row strong { font-size: 1.25rem; color: var(--text); }
-        .lq-row.highlight strong { color: var(--cyan); }
-        .lq-meta { font-size: 0.75rem; color: var(--dim); margin-top: 0.5rem; }
-        .lq-hint { font-size: 0.75rem; color: var(--dim); padding: 0 1.25rem 1.25rem; }
-        @media (max-width: 700px) {
-          .lq-fields { grid-template-columns: 1fr; }
-        }
+        .bw-row strong { font-size: 1.2rem; color: var(--text); }
+        .bw-row.accent strong { color: var(--accent); font-size: 1.35rem; }
+        .bw-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.35rem; }
+        .bw-hint { font-size: 0.78rem; color: var(--text-muted); margin-top: 1rem; text-align: center; }
       `}</style>
     </div>
   );
