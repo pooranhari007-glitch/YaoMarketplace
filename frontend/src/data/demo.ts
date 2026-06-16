@@ -3,9 +3,29 @@
 export const SITE = {
   name: "Harborview Estate",
   shortName: "Harborview",
-  tagline: "Direct booking dashboard",
+  tagline: "Stays & private events — book direct",
   location: "Pacific Northwest",
 };
+
+export const PROPERTY = {
+  bedrooms: 4,
+  sleeps: 10,
+  eventCapacity: 120,
+  acres: 6,
+  rating: 4.97,
+  reviews: 84,
+};
+
+export const AVAILABILITY_FORECAST = [
+  { week: "W1", open: 72 },
+  { week: "W2", open: 65 },
+  { week: "W3", open: 58 },
+  { week: "W4", open: 81 },
+  { week: "W5", open: 74 },
+  { week: "W6", open: 69 },
+  { week: "W7", open: 55 },
+  { week: "W8", open: 88 },
+];
 
 export const PRICING_DEMO = {
   stayNightly: 250,

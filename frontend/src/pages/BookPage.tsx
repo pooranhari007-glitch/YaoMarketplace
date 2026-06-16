@@ -26,6 +26,12 @@ export default function BookPage() {
   useEffect(() => {
     const t = params.get("type");
     if (t === "stay" || t === "event") setBookingType(t);
+    const s = params.get("start");
+    const e = params.get("end");
+    const g = params.get("guests");
+    if (s) setStartDate(s);
+    if (e) setEndDate(e);
+    if (g) setGuestCount(Number(g));
   }, [params]);
 
   async function fetchQuote() {

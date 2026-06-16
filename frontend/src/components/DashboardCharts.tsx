@@ -68,7 +68,7 @@ export function BookingMixChart() {
             <Cell key={e.name} fill={e.color} />
           ))}
         </Pie>
-        <Tooltip contentStyle={tooltipStyle} formatter={(v) => [`${v}%`, "Share"]} />
+        <Tooltip contentStyle={tooltipStyle} />
         <Legend wrapperStyle={{ fontSize: 11 }} />
       </PieChart>
     </ResponsiveContainer>

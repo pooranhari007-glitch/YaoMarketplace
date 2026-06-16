@@ -3,8 +3,8 @@ import ChatWidget from "./ChatWidget";
 import { SITE } from "../data/demo";
 
 const nav = [
-  { to: "/", label: "Overview", icon: "▦" },
-  { to: "/stay", label: "Stays", icon: "⌂" },
+  { to: "/", label: "Home", icon: "▦" },
+  { to: "/stay", label: "Stay", icon: "⌂" },
   { to: "/events", label: "Events", icon: "◈" },
   { to: "/book", label: "Book", icon: "＋" },
   { to: "/gallery", label: "Gallery", icon: "▣" },
@@ -22,7 +22,7 @@ export default function Layout() {
           <span className="dash-brand-icon">◆</span>
           <div>
             <strong>{SITE.shortName}</strong>
-            <small>Booking OS</small>
+            <small>Book direct</small>
           </div>
         </Link>
         <nav className="dash-side-nav">
@@ -39,7 +39,7 @@ export default function Layout() {
         </nav>
         <div className="dash-side-footer">
           <Link to="/book" className="btn btn-primary" style={{ width: "100%" }}>
-            New booking
+            Book now
           </Link>
         </div>
       </aside>
@@ -48,7 +48,7 @@ export default function Layout() {
         <header className="dash-topbar">
           <div>
             <h1 className="dash-page-title">{SITE.name}</h1>
-            <p className="dash-page-sub">{SITE.location} · Direct booking platform</p>
+            <p className="dash-page-sub">{SITE.tagline}</p>
           </div>
           <div className="dash-topbar-actions">
             <span className="dash-live">
