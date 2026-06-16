@@ -1,50 +1,50 @@
 const items = [
-  { icon: "✓", label: "Book direct — no platform fees" },
-  { icon: "🔒", label: "Secure Stripe payments" },
-  { icon: "📅", label: "Real-time availability" },
-  { icon: "★", label: "Professionally managed" },
+  "Direct reservation",
+  "Secure payment",
+  "Private calendar",
+  "Concierge service",
 ];
 
-export default function TrustBar({ light = false }: { light?: boolean }) {
+export default function TrustBar({ dark = false }: { dark?: boolean }) {
   return (
-    <div className={`trust-bar ${light ? "light" : ""}`}>
-      <div className="container trust-inner">
-        {items.map((item) => (
-          <div key={item.label} className="trust-item">
-            <span className="trust-icon" aria-hidden>{item.icon}</span>
-            <span>{item.label}</span>
-          </div>
+    <div className={`lux-trust ${dark ? "dark" : ""}`}>
+      <div className="container lux-trust-inner">
+        {items.map((label, i) => (
+          <span key={label} className="lux-trust-item">
+            {i > 0 && <span className="lux-dot" aria-hidden>·</span>}
+            {label}
+          </span>
         ))}
       </div>
       <style>{`
-        .trust-bar {
-          background: linear-gradient(90deg, var(--accent-deep), var(--accent));
-          color: rgba(255,255,255,0.95);
-          padding: 0.65rem 0;
-          font-size: 0.72rem;
-          font-weight: 600;
-          box-shadow: 0 4px 16px rgba(29, 78, 216, 0.2);
+        .lux-trust {
+          border-bottom: 1px solid var(--line);
+          background: var(--white);
+          padding: 1.1rem 0;
         }
-        .trust-bar.light {
-          background: var(--surface);
-          color: var(--accent-deep);
-          border-bottom: 1px solid var(--border);
-          box-shadow: var(--shadow-sm);
+        .lux-trust.dark {
+          background: var(--charcoal);
+          border-color: var(--line-light);
         }
-        .trust-inner {
+        .lux-trust-inner {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
-          gap: 0.85rem 1.5rem;
-        }
-        .trust-item {
-          display: flex;
           align-items: center;
-          gap: 0.35rem;
+          gap: 0.5rem 0;
         }
-        .trust-icon { opacity: 0.95; font-size: 0.7rem; }
-        @media (max-width: 640px) {
-          .trust-inner { flex-direction: column; align-items: center; gap: 0.4rem; }
+        .lux-trust-item {
+          font-size: 0.62rem;
+          font-weight: 500;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--stone);
+        }
+        .lux-trust.dark .lux-trust-item { color: rgba(255,255,255,0.45); }
+        .lux-dot {
+          margin: 0 1.25rem;
+          color: var(--gold-dim);
+          font-size: 1rem;
         }
       `}</style>
     </div>

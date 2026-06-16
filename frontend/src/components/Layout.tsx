@@ -13,19 +13,16 @@ const nav = [
 
 export default function Layout() {
   const { pathname } = useLocation();
+  const onHero = pathname === "/" || pathname === "/stay" || pathname === "/events";
 
   return (
     <>
-      <header className="site-header">
-        <div className="container header-inner">
-          <Link to="/" className="logo">
-            <span className="logo-mark">H</span>
-            <span>
-              <strong>{SITE.name}</strong>
-              <small>{SITE.tagline}</small>
-            </span>
+      <header className={`lux-header ${onHero ? "on-hero" : ""}`}>
+        <div className="container lux-header-inner">
+          <Link to="/" className="lux-logo">
+            <span className="lux-logo-mark">{SITE.shortName}</span>
           </Link>
-          <nav className="nav">
+          <nav className="lux-nav">
             {nav.map((item) => (
               <Link
                 key={item.to}
@@ -36,147 +33,157 @@ export default function Layout() {
               </Link>
             ))}
           </nav>
-          <Link to="/book" className="btn btn-primary header-cta">
-            Book direct
+          <Link to="/book" className="btn btn-primary lux-reserve">
+            Reserve
           </Link>
         </div>
       </header>
       <main>
         <Outlet />
       </main>
-      <footer className="site-footer">
-        <div className="container footer-grid">
-          <div>
-            <strong className="footer-brand">{SITE.name}</strong>
-            <p>Overnight stays & private events · {SITE.location}</p>
+      <footer className="lux-footer">
+        <div className="container lux-footer-top">
+          <div className="lux-footer-brand">
+            <span className="eyebrow">Est. MMXXIV</span>
+            <h2>{SITE.name}</h2>
+            <p>{SITE.tagline}</p>
           </div>
-          <div className="footer-links">
-            <Link to="/stay">Stays</Link>
-            <Link to="/events">Events</Link>
-            <Link to="/book">Book</Link>
+          <div className="lux-footer-col">
+            <span className="footer-label">Experience</span>
+            <Link to="/stay">Private stays</Link>
+            <Link to="/events">Private events</Link>
+            <Link to="/gallery">Gallery</Link>
+          </div>
+          <div className="lux-footer-col">
+            <span className="footer-label">Reserve</span>
+            <Link to="/book?type=stay">Book a stay</Link>
+            <Link to="/book?type=event">Plan an event</Link>
             <Link to="/policies">Policies</Link>
           </div>
-          <div className="footer-cta">
-            <Link to="/book?type=stay" className="btn btn-outline btn-sm">Book a stay</Link>
-            <Link to="/book?type=event" className="btn btn-event btn-sm">Plan an event</Link>
-          </div>
         </div>
-        <div className="container footer-bottom">
-          <p>© {new Date().getFullYear()} {SITE.name}. Book direct — no platform fees.</p>
+        <div className="container lux-footer-bottom">
+          <p>© {new Date().getFullYear()} {SITE.name}</p>
+          <p className="lux-footer-loc">{SITE.location}</p>
         </div>
       </footer>
       <ChatWidget />
       <style>{`
-        .site-header {
-          position: sticky;
+        .lux-header {
+          position: fixed;
           top: 0;
-          z-index: 100;
-          background: rgba(255, 255, 255, 0.92);
-          backdrop-filter: blur(12px);
-          border-bottom: 1px solid var(--border);
-          box-shadow: 0 4px 20px rgba(29, 78, 216, 0.06);
+          left: 0;
+          right: 0;
+          z-index: 200;
+          transition: background 0.5s var(--ease), border-color 0.5s;
+          border-bottom: 1px solid transparent;
         }
-        .header-inner {
+        .lux-header.on-hero {
+          background: linear-gradient(to bottom, rgba(8,8,8,0.5), transparent);
+        }
+        .lux-header:not(.on-hero) {
+          background: rgba(250, 249, 247, 0.92);
+          backdrop-filter: blur(16px);
+          border-bottom-color: var(--line);
+        }
+        .lux-header-inner {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 0.65rem 0;
-          gap: 1rem;
-        }
-        .logo {
-          display: flex;
-          align-items: center;
-          gap: 0.65rem;
-          color: var(--text);
-          min-width: 0;
-        }
-        .logo-mark {
-          width: 2rem;
-          height: 2rem;
-          border-radius: 7px;
-          background: linear-gradient(145deg, var(--accent-light), var(--accent-deep));
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-family: "Playfair Display", serif;
-          font-weight: 700;
-          font-size: 0.95rem;
-          flex-shrink: 0;
-          box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
-        }
-        .logo strong {
-          display: block;
-          font-family: "Playfair Display", serif;
-          font-size: 1.05rem;
-          line-height: 1.2;
-        }
-        .logo small {
-          display: block;
-          font-size: 0.68rem;
-          color: var(--muted);
-          font-weight: 400;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          max-width: 200px;
-        }
-        .nav {
-          display: flex;
-          gap: 1.1rem;
-          flex-wrap: wrap;
-        }
-        .nav a {
-          color: var(--muted);
-          font-size: 0.8rem;
-          font-weight: 600;
-        }
-        .nav a.active, .nav a:hover { color: var(--accent); }
-        .header-cta { padding: 0.48rem 0.95rem; font-size: 0.75rem; }
-        .site-footer {
-          margin-top: 0;
-          background: linear-gradient(180deg, var(--accent-deep) 0%, #0f172a 100%);
-          color: rgba(255,255,255,0.78);
-          padding: 2.5rem 0 0;
-          box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
-        }
-        .footer-grid {
-          display: grid;
-          grid-template-columns: 1.5fr 1fr 1fr;
+          height: 72px;
           gap: 2rem;
-          padding-bottom: 2rem;
-          border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        .footer-brand {
+        .lux-logo-mark {
+          font-family: "Cormorant Garamond", serif;
+          font-size: 1.5rem;
+          font-weight: 500;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--white);
+          transition: color 0.5s;
+        }
+        .lux-header:not(.on-hero) .lux-logo-mark { color: var(--black); }
+        .lux-nav {
+          display: flex;
+          gap: 2rem;
+        }
+        .lux-nav a {
+          font-size: 0.65rem;
+          font-weight: 500;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.55);
+          transition: color 0.3s;
+        }
+        .lux-header:not(.on-hero) .lux-nav a { color: var(--stone); }
+        .lux-nav a:hover,
+        .lux-nav a.active { color: var(--gold); }
+        .lux-header:not(.on-hero) .lux-nav a.active { color: var(--black); }
+        .lux-reserve {
+          padding: 0.75rem 1.5rem;
+          font-size: 0.62rem;
+        }
+        .lux-header.on-hero .btn-primary {
+          background: transparent;
+          border-color: rgba(255,255,255,0.4);
+          color: var(--white);
+        }
+        .lux-header.on-hero .btn-primary:hover {
+          background: var(--white);
+          color: var(--black);
+          border-color: var(--white);
+        }
+        .lux-footer {
+          background: var(--black);
+          color: rgba(255,255,255,0.45);
+          padding-top: 5rem;
+        }
+        .lux-footer-top {
+          display: grid;
+          grid-template-columns: 2fr 1fr 1fr;
+          gap: 3rem;
+          padding-bottom: 4rem;
+          border-bottom: 1px solid var(--line-light);
+        }
+        .lux-footer-brand h2 {
+          font-size: 2.5rem;
+          color: var(--cream);
+          margin-bottom: 0.75rem;
+        }
+        .lux-footer-brand p {
+          font-weight: 300;
+          font-size: 0.95rem;
+        }
+        .footer-label {
           display: block;
-          font-family: "Playfair Display", serif;
-          font-size: 1.2rem;
-          color: white;
-          margin-bottom: 0.35rem;
+          font-size: 0.6rem;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--gold);
+          margin-bottom: 1.25rem;
         }
-        .footer-links {
+        .lux-footer-col {
           display: flex;
           flex-direction: column;
-          gap: 0.4rem;
+          gap: 0.65rem;
         }
-        .footer-links a { color: rgba(255,255,255,0.7); font-size: 0.9rem; }
-        .footer-links a:hover { color: white; }
-        .footer-cta { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start; }
-        .btn-sm { padding: 0.55rem 1rem; font-size: 0.82rem; }
-        .footer-cta .btn-outline {
-          border-color: rgba(255,255,255,0.45);
-          color: white;
-          background: rgba(255,255,255,0.06);
+        .lux-footer-col a {
+          font-size: 0.88rem;
+          font-weight: 300;
+          color: rgba(255,255,255,0.5);
+          transition: color 0.3s;
         }
-        .footer-cta .btn-outline:hover { background: rgba(255,255,255,0.14); color: white; }
-        .footer-bottom {
-          padding: 1.25rem 0;
-          font-size: 0.8rem;
-          color: rgba(255,255,255,0.45);
+        .lux-footer-col a:hover { color: var(--cream); }
+        .lux-footer-bottom {
+          display: flex;
+          justify-content: space-between;
+          padding: 1.75rem 0;
+          font-size: 0.72rem;
+          letter-spacing: 0.08em;
         }
+        .lux-footer-loc { color: var(--gold); }
         @media (max-width: 768px) {
-          .nav, .logo small { display: none; }
-          .footer-grid { grid-template-columns: 1fr; }
+          .lux-nav { display: none; }
+          .lux-footer-top { grid-template-columns: 1fr; gap: 2rem; }
         }
       `}</style>
     </>

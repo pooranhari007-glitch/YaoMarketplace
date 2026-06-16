@@ -3,210 +3,224 @@ import PageHero from "../components/PageHero";
 import TrustBar from "../components/TrustBar";
 import { IMAGES, PRICING_DEMO, SITE } from "../data/demo";
 
-const pathways = [
-  {
-    type: "stay",
-    title: "Overnight Stays",
-    desc: "Private suites, coastal views, and the calm of a boutique retreat — book nightly without platform markups.",
-    image: IMAGES.stayInterior,
-    to: "/stay",
-    cta: "Explore stays",
-    accent: "var(--accent-light)",
-  },
-  {
-    type: "event",
-    title: "Events & Gatherings",
-    desc: "Weddings, corporate retreats, and celebrations with flexible layouts, on-site coordination, and COI support.",
-    image: IMAGES.eventTable,
-    to: "/events",
-    cta: "Plan your event",
-    accent: "var(--accent)",
-  },
-];
-
-const features = [
-  {
-    title: "One property, two experiences",
-    body: "Whether guests need a restorative weekend or a full-day celebration, the estate adapts — with separate booking paths and pricing.",
-  },
-  {
-    title: "Direct booking, full transparency",
-    body: "Guests see real-time availability, instant quotes, and secure checkout. You keep more revenue and control the guest relationship.",
-  },
-  {
-    title: "Professionally managed",
-    body: "Calendar sync with Airbnb, VRBO, and Peerspace prevents double bookings. Insurance review and admin tools keep operations smooth.",
-  },
-];
-
 export default function HomePage() {
   return (
     <>
       <PageHero
         eyebrow={SITE.location}
-        title="Where stays and celebrations feel unmistakably yours"
-        subtitle={`${SITE.name} welcomes overnight guests and event clients under one roof — with the trust of a professional venue and the warmth of a private estate. Book direct for the best rate.`}
+        title="An address reserved for the exceptional"
+        subtitle={`${SITE.name} is a private estate where overnight guests and celebration hosts experience the same standard — understated, impeccable, and entirely yours.`}
         image={IMAGES.home}
-        primaryCta={{ label: "Check availability", to: "/book" }}
-        secondaryCta={{ label: "Explore the estate", to: "/stay" }}
+        primaryCta={{ label: "Reserve", to: "/book" }}
+        secondaryCta={{ label: "Discover", to: "/stay" }}
       />
       <TrustBar />
 
+      <section className="section section-cream">
+        <div className="container lux-split reveal">
+          <div>
+            <span className="eyebrow">The estate</span>
+            <h2>Two experiences.<br />One uncompromising standard.</h2>
+            <div className="divider" />
+            <p className="lead">
+              Whether arriving for a restorative escape or orchestrating a private
+              celebration, every detail is considered — from arrival to departure.
+            </p>
+          </div>
+          <div className="lux-stats">
+            <div className="lux-stat">
+              <span className="lux-stat-num">${PRICING_DEMO.stayNightly}</span>
+              <span className="lux-stat-label">From per night</span>
+            </div>
+            <div className="lux-stat">
+              <span className="lux-stat-num">${PRICING_DEMO.eventFrom}</span>
+              <span className="lux-stat-label">Events from</span>
+            </div>
+            <div className="lux-stat">
+              <span className="lux-stat-num">{PRICING_DEMO.depositPercent}%</span>
+              <span className="lux-stat-label">Deposit to confirm</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="section">
         <div className="container">
-          <div className="intro-grid">
+          <div className="lux-duo">
+            <Link to="/stay" className="lux-duo-card">
+              <div className="lux-duo-img" style={{ backgroundImage: `url(${IMAGES.stayInterior})` }} />
+              <div className="lux-duo-body">
+                <span className="eyebrow">Stay</span>
+                <h3>Private residence</h3>
+                <p>Curated suites, uninterrupted privacy, and the quiet luxury of time well spent.</p>
+                <span className="lux-link">Explore →</span>
+              </div>
+            </Link>
+            <Link to="/events" className="lux-duo-card">
+              <div className="lux-duo-img" style={{ backgroundImage: `url(${IMAGES.eventTable})` }} />
+              <div className="lux-duo-body">
+                <span className="eyebrow">Gather</span>
+                <h3>Private events</h3>
+                <p>Weddings, retreats, and milestone celebrations in a setting worthy of the occasion.</p>
+                <span className="lux-link">Explore →</span>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="section section-dark">
+        <div className="container lux-manifesto reveal">
+          <span className="eyebrow">Philosophy</span>
+          <blockquote>
+            &ldquo;Luxury is not excess. It is the absence of compromise — in space,
+            in service, and in the certainty that every moment belongs to you.&rdquo;
+          </blockquote>
+          <div className="lux-manifesto-grid">
             <div>
-              <span className="eyebrow">Two ways to experience</span>
-              <h2>Built for overnight guests and event clients alike</h2>
-              <p className="lead">
-                Your property isn&apos;t just a rental — it&apos;s a destination. The site makes that
-                clear from the first screen, with dedicated journeys for each audience.
-              </p>
+              <h4>Direct reservation</h4>
+              <p>No intermediaries. Transparent pricing. Immediate confirmation.</p>
             </div>
-            <div className="stat-row">
-              <div className="stat">
-                <strong>From ${PRICING_DEMO.stayNightly}</strong>
-                <span>per night · stays</span>
-              </div>
-              <div className="stat">
-                <strong>From ${PRICING_DEMO.eventFrom}</strong>
-                <span>event packages</span>
-              </div>
-              <div className="stat">
-                <strong>{PRICING_DEMO.depositPercent}%</strong>
-                <span>deposit to confirm</span>
-              </div>
+            <div>
+              <h4>Discreet management</h4>
+              <p>Calendar synchronisation, concierge support, and white-glove coordination.</p>
             </div>
-          </div>
-
-          <div className="pathway-grid">
-            {pathways.map((p) => (
-              <Link key={p.type} to={p.to} className="pathway-card">
-                <div className="pathway-img" style={{ backgroundImage: `url(${p.image})` }} />
-                <div className="pathway-body">
-                  <span className="pathway-tag" style={{ color: p.accent }}>
-                    {p.type === "stay" ? "Stays" : "Events"}
-                  </span>
-                  <h3>{p.title}</h3>
-                  <p>{p.desc}</p>
-                  <span className="pathway-link">{p.cta} →</span>
-                </div>
-              </Link>
-            ))}
+            <div>
+              <h4>Lasting impression</h4>
+              <p>An environment designed to be remembered — and returned to.</p>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="section section-alt">
-        <div className="container">
-          <span className="eyebrow">Why book direct</span>
-          <h2 className="section-title">Trust, clarity, and flexibility — by design</h2>
-          <div className="feature-grid">
-            {features.map((f) => (
-              <div key={f.title} className="feature-card card">
-                <h3>{f.title}</h3>
-                <p>{f.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="cta-banner">
-        <div className="container cta-banner-inner">
-          <div>
-            <h2>Ready to reserve your dates?</h2>
-            <p>Instant quotes, secure deposit, and confirmation — no middleman.</p>
-          </div>
-          <div className="cta-banner-actions">
+      <section className="section lux-cta-final">
+        <div className="container lux-cta-final-inner reveal">
+          <h2>Your dates await</h2>
+          <p>Reserve directly. Experience without compromise.</p>
+          <div className="lux-ctas-row">
             <Link to="/book?type=stay" className="btn btn-primary">Book a stay</Link>
-            <Link to="/book?type=event" className="btn btn-event">Host an event</Link>
+            <Link to="/book?type=event" className="btn btn-gold">Plan an event</Link>
           </div>
         </div>
       </section>
 
       <style>{`
-        .intro-grid {
+        .lux-split {
           display: grid;
           grid-template-columns: 1.2fr 1fr;
-          gap: 3rem;
+          gap: 5rem;
           align-items: end;
-          margin-bottom: 3rem;
         }
-        .intro-grid h2 { font-size: clamp(1.55rem, 3.5vw, 2.2rem); margin-bottom: 0.85rem; }
-        .stat-row { display: flex; flex-direction: column; gap: 0.75rem; }
-        .stat {
-          padding: 0.85rem 1rem;
-          background: var(--surface);
-          border: 1px solid var(--border);
-          border-radius: var(--radius);
-          box-shadow: var(--shadow-sm);
+        .lux-split h2 { font-size: clamp(2rem, 4vw, 3.2rem); }
+        .lux-stats {
+          display: flex;
+          flex-direction: column;
+          gap: 2.5rem;
+          border-left: 1px solid var(--line);
+          padding-left: 3rem;
         }
-        .stat strong { display: block; font-size: 1.15rem; font-family: "Playfair Display", serif; color: var(--accent-deep); }
-        .stat span { font-size: 0.78rem; color: var(--muted); }
-        .pathway-grid {
+        .lux-stat-num {
+          display: block;
+          font-family: "Cormorant Garamond", serif;
+          font-size: 2.5rem;
+          color: var(--black);
+          line-height: 1;
+        }
+        .lux-stat-label {
+          font-size: 0.65rem;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: var(--muted);
+          margin-top: 0.5rem;
+        }
+        .lux-duo {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 1.5rem;
+          grid-template-columns: 1fr 1fr;
+          gap: 1px;
+          background: var(--line);
         }
-        .pathway-card {
+        .lux-duo-card {
           display: grid;
-          grid-template-rows: 180px 1fr;
-          border-radius: var(--radius-lg);
-          overflow: hidden;
-          border: 1px solid var(--border);
-          background: var(--surface);
+          grid-template-rows: 320px 1fr;
+          background: var(--white);
           color: inherit;
-          box-shadow: var(--shadow-shine);
-          transition: transform 0.2s, box-shadow 0.2s;
+          transition: background 0.5s var(--ease);
+          overflow: hidden;
         }
-        .pathway-card:hover {
-          transform: translateY(-3px);
-          box-shadow:
-            0 1px 0 rgba(255,255,255,0.95) inset,
-            0 16px 36px rgba(29, 78, 216, 0.14),
-            0 4px 12px rgba(15, 23, 42, 0.06);
-        }
-        .pathway-img {
+        .lux-duo-card:hover { background: var(--cream); }
+        .lux-duo-img {
           background-size: cover;
           background-position: center;
+          transition: transform 0.8s var(--ease);
         }
-        .pathway-body { padding: 1.15rem; }
-        .pathway-tag {
+        .lux-duo-card:hover .lux-duo-img { transform: scale(1.04); }
+        .lux-duo-body { padding: 2.5rem; }
+        .lux-duo-body h3 { font-size: 1.75rem; margin-bottom: 0.75rem; }
+        .lux-duo-body p {
+          font-weight: 300;
+          color: var(--stone);
+          font-size: 0.95rem;
+          margin-bottom: 1.5rem;
+          line-height: 1.7;
+        }
+        .lux-link {
           font-size: 0.65rem;
-          font-weight: 700;
-          letter-spacing: 0.12em;
+          letter-spacing: 0.2em;
           text-transform: uppercase;
+          color: var(--gold);
+          font-weight: 500;
         }
-        .pathway-body h3 { font-size: 1.2rem; margin: 0.35rem 0 0.5rem; }
-        .pathway-body p { color: var(--muted); font-size: 0.88rem; margin-bottom: 0.85rem; }
-        .pathway-link { font-weight: 700; font-size: 0.78rem; color: var(--red); }
-        .section-title { font-size: clamp(1.45rem, 3vw, 2rem); margin-bottom: 1.5rem; }
-        .feature-grid {
+        .lux-manifesto blockquote {
+          font-family: "Cormorant Garamond", serif;
+          font-size: clamp(1.5rem, 3vw, 2.25rem);
+          font-weight: 400;
+          font-style: italic;
+          line-height: 1.5;
+          color: var(--cream);
+          max-width: 28ch;
+          margin: 1.5rem 0 4rem;
+        }
+        .lux-manifesto-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 1.25rem;
+          gap: 3rem;
+          padding-top: 3rem;
+          border-top: 1px solid var(--line-light);
         }
-        .feature-card h3 { font-size: 1rem; margin-bottom: 0.5rem; }
-        .feature-card p { color: var(--muted); font-size: 0.88rem; }
-        .cta-banner {
-          background: linear-gradient(135deg, var(--accent-deep) 0%, var(--accent) 55%, #3b82f6 100%);
-          color: white;
-          padding: 2.75rem 0;
-          box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
+        .lux-manifesto-grid h4 {
+          font-family: "Inter", sans-serif;
+          font-size: 0.65rem;
+          font-weight: 500;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: var(--gold);
+          margin-bottom: 0.75rem;
         }
-        .cta-banner-inner {
+        .lux-manifesto-grid p {
+          font-weight: 300;
+          font-size: 0.9rem;
+          color: rgba(255,255,255,0.45);
+          line-height: 1.7;
+        }
+        .lux-cta-final {
+          text-align: center;
+          background: var(--cream);
+        }
+        .lux-cta-final h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 0.75rem; }
+        .lux-cta-final p {
+          font-weight: 300;
+          color: var(--stone);
+          margin-bottom: 2.5rem;
+        }
+        .lux-ctas-row {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 1.5rem;
+          justify-content: center;
+          gap: 1rem;
           flex-wrap: wrap;
         }
-        .cta-banner h2 { font-size: clamp(1.4rem, 2.8vw, 1.85rem); margin-bottom: 0.4rem; }
-        .cta-banner p { color: rgba(255,255,255,0.85); font-size: 0.9rem; }
-        .cta-banner-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
         @media (max-width: 900px) {
-          .intro-grid, .pathway-grid, .feature-grid { grid-template-columns: 1fr; }
+          .lux-split, .lux-duo, .lux-manifesto-grid { grid-template-columns: 1fr; }
+          .lux-stats { border-left: none; padding-left: 0; flex-direction: row; flex-wrap: wrap; gap: 2rem; }
         }
       `}</style>
     </>

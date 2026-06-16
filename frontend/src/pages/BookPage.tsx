@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import TrustBar from "../components/TrustBar";
 import { api } from "../api/client";
 import { IMAGES, PRICING_DEMO, SITE } from "../data/demo";
 import type { BookingType, CheckoutResult, Quote } from "../types";
-
-const steps = ["Dates", "Details", "Insurance", "Payment"] as const;
 
 export default function BookPage() {
   const [params] = useSearchParams();
@@ -30,8 +27,6 @@ export default function BookPage() {
     if (t === "stay" || t === "event") setBookingType(t);
   }, [params]);
 
-  const stepIndex = step === "dates" ? 0 : step === "guest" ? 1 : 2;
-
   async function fetchQuote() {
     if (!startDate || !endDate) return;
     setError("");
@@ -48,7 +43,7 @@ export default function BookPage() {
       setQuote(q);
       setStep("guest");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not get quote");
+      setError(e instanceof Error ? e.message : "Could not retrieve quote");
     }
   }
 
@@ -85,146 +80,130 @@ export default function BookPage() {
       if (result.checkout_url) {
         window.location.href = result.checkout_url;
       } else {
-        setError("Booking created. Stripe checkout will activate when payment keys are configured.");
+        setError("Reservation received. Payment portal activates upon configuration.");
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Booking failed");
+      setError(e instanceof Error ? e.message : "Reservation failed");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <>
-      <section className="book-hero" style={{ backgroundImage: `url(${IMAGES.book})` }}>
-        <div className="book-hero-overlay" />
-        <div className="container book-hero-content">
-          <span className="eyebrow hero-eyebrow">Direct booking</span>
-          <h1>Reserve {SITE.name}</h1>
-          <p>Instant quote · Secure deposit · No platform fees</p>
+    <div className="lux-book">
+      <div className="lux-book-hero" style={{ backgroundImage: `url(${IMAGES.book})` }}>
+        <div className="lux-book-overlay" />
+        <div className="container lux-book-hero-text">
+          <span className="eyebrow">Reservation</span>
+          <h1>{SITE.name}</h1>
         </div>
-      </section>
-      <TrustBar light />
+      </div>
 
-      <div className="container book-layout">
-        <aside className="book-sidebar card">
-          <h3>Your reservation</h3>
-          <div className="type-toggle">
+      <div className="container lux-book-layout">
+        <aside className="lux-book-aside reveal">
+          <span className="eyebrow">Experience</span>
+          <div className="lux-type-select">
             <button
               type="button"
-              className={bookingType === "stay" ? "active stay" : ""}
+              className={bookingType === "stay" ? "active" : ""}
               onClick={() => { setBookingType("stay"); setQuote(null); setStep("dates"); }}
             >
-              Overnight stay
+              Private stay
             </button>
             <button
               type="button"
-              className={bookingType === "event" ? "active event" : ""}
+              className={bookingType === "event" ? "active" : ""}
               onClick={() => { setBookingType("event"); setQuote(null); setStep("dates"); }}
             >
-              Event / gathering
+              Private event
             </button>
           </div>
 
           {quote ? (
-            <div className="quote-box">
-              <div className="quote-line">
+            <div className="lux-quote">
+              <div className="lux-quote-row">
                 <span>Total</span>
                 <strong>${quote.total_amount}</strong>
               </div>
-              <div className="quote-line highlight">
-                <span>Deposit due today</span>
+              <div className="lux-quote-row accent">
+                <span>Retainer due</span>
                 <strong>${quote.deposit_amount}</strong>
               </div>
               {bookingType === "stay" && (
-                <p className="quote-note">{quote.nights} night(s) · from ${PRICING_DEMO.stayNightly}/night</p>
+                <p className="lux-quote-meta">{quote.nights} nights</p>
               )}
             </div>
           ) : (
-            <p className="sidebar-hint">
+            <p className="lux-aside-note">
               {bookingType === "stay"
-                ? `Stays from $${PRICING_DEMO.stayNightly}/night · ${PRICING_DEMO.depositPercent}% deposit`
-                : `Events from $${PRICING_DEMO.eventFrom} · ${PRICING_DEMO.depositPercent}% deposit`}
+                ? `From $${PRICING_DEMO.stayNightly} per evening`
+                : `From $${PRICING_DEMO.eventFrom.toLocaleString()} per event`}
             </p>
           )}
 
-          <ul className="sidebar-trust">
-            <li>Secure Stripe checkout</li>
-            <li>Synced calendar availability</li>
-            <li>Confirmation by email</li>
+          <ul className="lux-aside-list">
+            <li>Secure payment</li>
+            <li>Instant confirmation</li>
+            <li>Concierge support</li>
           </ul>
         </aside>
 
-        <div className="book-main">
-          <div className="stepper">
-            {steps.map((s, i) => (
-              <div key={s} className={`step ${i <= stepIndex ? "done" : ""} ${i === stepIndex ? "current" : ""}`}>
-                <span className="step-num">{i + 1}</span>
-                <span>{s}</span>
-              </div>
+        <div className="lux-book-form-wrap reveal">
+          <div className="lux-steps">
+            {["Dates", "Details", "Complete"].map((s, i) => (
+              <span key={s} className={`lux-step ${i <= (step === "dates" ? 0 : step === "guest" ? 1 : 2) ? "on" : ""}`}>
+                {s}
+              </span>
             ))}
           </div>
 
           {step === "dates" && (
-            <div className="card book-form">
+            <div className="lux-form-panel">
               <h2>Select your dates</h2>
-              <p className="form-desc">
-                {bookingType === "stay"
-                  ? "Choose check-in and check-out. Minimum stay may apply."
-                  : "Select your event start and end dates for an instant package quote."}
-              </p>
-              <div className="form-row">
+              <div className="lux-form-row">
                 <div className="form-group">
-                  <label>{bookingType === "stay" ? "Check-in" : "Event start"}</label>
+                  <label>{bookingType === "stay" ? "Arrival" : "Event begins"}</label>
                   <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>{bookingType === "stay" ? "Check-out" : "Event end"}</label>
+                  <label>{bookingType === "stay" ? "Departure" : "Event concludes"}</label>
                   <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
                 </div>
               </div>
               <div className="form-group">
-                <label>{bookingType === "stay" ? "Guests" : "Expected attendees"}</label>
-                <input
-                  type="number"
-                  min={1}
-                  value={guestCount}
-                  onChange={(e) => setGuestCount(Number(e.target.value))}
-                />
+                <label>{bookingType === "stay" ? "Guests" : "Attendees"}</label>
+                <input type="number" min={1} value={guestCount} onChange={(e) => setGuestCount(Number(e.target.value))} />
               </div>
-              {error && <p className="error">{error}</p>}
+              {error && <p className="lux-error">{error}</p>}
               <button type="button" className="btn btn-primary" onClick={fetchQuote}>
-                Get instant quote →
+                Continue
               </button>
             </div>
           )}
 
           {step === "guest" && quote && (
-            <div className="card book-form">
-              <h2>Guest details</h2>
-              <p className="form-desc">We&apos;ll send confirmation and arrival details to this email.</p>
+            <div className="lux-form-panel">
+              <h2>Your details</h2>
               <div className="form-group">
                 <label>Full name</label>
-                <input value={guestName} onChange={(e) => setGuestName(e.target.value)} required />
+                <input value={guestName} onChange={(e) => setGuestName(e.target.value)} />
               </div>
               <div className="form-group">
                 <label>Email</label>
-                <input type="email" value={guestEmail} onChange={(e) => setGuestEmail(e.target.value)} required />
+                <input type="email" value={guestEmail} onChange={(e) => setGuestEmail(e.target.value)} />
               </div>
               <div className="form-group">
-                <label>Phone</label>
+                <label>Telephone</label>
                 <input value={guestPhone} onChange={(e) => setGuestPhone(e.target.value)} />
               </div>
               <div className="form-group">
                 <label>Special requests</label>
-                <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} placeholder="Dietary needs, setup requests, arrival time..." />
+                <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} />
               </div>
-              <div className="form-actions">
+              <div className="lux-form-actions">
                 <button type="button" className="btn btn-outline" onClick={() => setStep("dates")}>Back</button>
                 {bookingType === "event" && (
-                  <button type="button" className="btn btn-outline" onClick={() => setStep("insurance")}>
-                    Add COI
-                  </button>
+                  <button type="button" className="btn btn-outline" onClick={() => setStep("insurance")}>Add COI</button>
                 )}
                 <button
                   type="button"
@@ -232,156 +211,186 @@ export default function BookPage() {
                   disabled={loading || !guestName || !guestEmail}
                   onClick={submitBooking}
                 >
-                  {loading ? "Processing..." : `Pay $${quote.deposit_amount} deposit`}
+                  {loading ? "Processing…" : `Pay $${quote.deposit_amount} retainer`}
                 </button>
               </div>
-              {error && <p className="error">{error}</p>}
+              {error && <p className="lux-error">{error}</p>}
             </div>
           )}
 
           {step === "insurance" && (
-            <div className="card book-form">
-              <h2>Certificate of Insurance</h2>
-              <p className="form-desc">
-                Required for most events. Upload your COI now or{" "}
-                <a href="https://www.eventhelper.com" target="_blank" rel="noreferrer">purchase coverage</a>.
+            <div className="lux-form-panel">
+              <h2>Certificate of insurance</h2>
+              <p className="lux-form-note">
+                Upload your COI or{" "}
+                <a href="https://www.eventhelper.com" target="_blank" rel="noreferrer">obtain coverage</a>.
               </p>
               <div className="form-group">
-                <label>Upload COI (PDF or image)</label>
+                <label>Document</label>
                 <input type="file" accept=".pdf,.png,.jpg" onChange={(e) => setCoiFile(e.target.files?.[0] || null)} />
               </div>
-              <div className="form-actions">
-                <button type="button" className="btn btn-outline" onClick={() => setStep("guest")}>Back to details</button>
-              </div>
+              <button type="button" className="btn btn-primary" onClick={() => setStep("guest")}>Return</button>
             </div>
           )}
 
-          <p className="book-footer-note">
-            Questions? <Link to="/faq">Read FAQ</Link> or use the chat widget.
+          <p className="lux-form-footer">
+            Enquiries · <Link to="/faq">FAQ</Link>
           </p>
         </div>
       </div>
 
       <style>{`
-        .book-hero {
-          position: relative;
-          min-height: 220px;
+        .lux-book-hero {
+          height: 40vh;
+          min-height: 280px;
           background-size: cover;
           background-position: center;
+          position: relative;
           display: flex;
           align-items: flex-end;
-          color: white;
+          margin-top: 72px;
         }
-        .book-hero-overlay {
+        .lux-book-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to top, rgba(15, 23, 42, 0.88), rgba(37, 99, 235, 0.4));
+          background: linear-gradient(to top, rgba(8,8,8,0.9), rgba(8,8,8,0.3));
         }
-        .book-hero-content {
+        .lux-book-hero-text {
           position: relative;
-          padding: 2.5rem 0;
+          padding-bottom: 3rem;
+          color: var(--white);
         }
-        .hero-eyebrow { color: var(--gold); }
-        .book-hero h1 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin: 0.25rem 0; }
-        .book-hero p { color: rgba(255,255,255,0.85); }
-        .book-layout {
+        .lux-book-hero h1 {
+          font-size: clamp(2rem, 4vw, 3rem);
+          color: var(--white);
+        }
+        .lux-book-layout {
           display: grid;
-          grid-template-columns: 320px 1fr;
-          gap: 2rem;
-          padding: 2.5rem 0 4rem;
+          grid-template-columns: 300px 1fr;
+          gap: 4rem;
+          padding: 4rem 0 6rem;
           align-items: start;
         }
-        .book-sidebar h3 { font-size: 1.1rem; margin-bottom: 1rem; }
-        .type-toggle { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; }
-        .type-toggle button {
-          padding: 0.65rem 1rem;
-          border: 2px solid var(--border);
-          border-radius: 10px;
-          background: var(--bg);
-          cursor: pointer;
-          font-weight: 600;
-          font-size: 0.88rem;
+        .lux-type-select {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          border: 1px solid var(--line);
+          margin: 1rem 0 2rem;
+        }
+        .lux-type-select button {
+          padding: 1rem 1.25rem;
+          border: none;
+          border-bottom: 1px solid var(--line);
+          background: transparent;
           text-align: left;
-          transition: all 0.15s;
+          font-size: 0.68rem;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          font-weight: 500;
+          color: var(--stone);
+          cursor: pointer;
+          transition: all 0.3s var(--ease);
         }
-        .type-toggle button.active.stay,
-        .type-toggle button.active.event {
-          border-color: var(--accent-light);
-          background: var(--accent-soft);
-          color: var(--accent-deep);
-          box-shadow: var(--shadow-sm);
+        .lux-type-select button:last-child { border-bottom: none; }
+        .lux-type-select button.active {
+          background: var(--black);
+          color: var(--white);
         }
-        .quote-box {
-          background: var(--bg);
-          border-radius: 10px;
-          padding: 1rem;
-          margin-bottom: 1rem;
+        .lux-quote {
+          border-top: 1px solid var(--line);
+          border-bottom: 1px solid var(--line);
+          padding: 1.5rem 0;
+          margin-bottom: 2rem;
         }
-        .quote-line {
+        .lux-quote-row {
           display: flex;
           justify-content: space-between;
+          font-size: 0.75rem;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--muted);
+          margin-bottom: 0.75rem;
+        }
+        .lux-quote-row strong {
+          font-family: "Cormorant Garamond", serif;
+          font-size: 1.5rem;
+          color: var(--black);
+          letter-spacing: 0;
+          text-transform: none;
+        }
+        .lux-quote-row.accent strong { color: var(--gold); }
+        .lux-quote-meta { font-size: 0.75rem; color: var(--muted); }
+        .lux-aside-note {
+          font-weight: 300;
+          color: var(--stone);
           font-size: 0.9rem;
-          margin-bottom: 0.4rem;
+          margin-bottom: 2rem;
         }
-        .quote-line.highlight {
-          padding-top: 0.5rem;
-          border-top: 1px dashed var(--border);
-          font-weight: 600;
-        }
-        .quote-line strong { font-family: "Playfair Display", serif; font-size: 1.2rem; }
-        .quote-note { font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem; }
-        .sidebar-hint { font-size: 0.88rem; color: var(--muted); margin-bottom: 1rem; }
-        .sidebar-trust {
+        .lux-aside-list {
           list-style: none;
-          font-size: 0.82rem;
+          font-size: 0.68rem;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
           color: var(--muted);
+        }
+        .lux-aside-list li {
+          padding: 0.5rem 0;
+          border-bottom: 1px solid var(--line);
+        }
+        .lux-steps {
+          display: flex;
+          gap: 2rem;
+          margin-bottom: 3rem;
+        }
+        .lux-step {
+          font-size: 0.62rem;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: var(--muted);
+        }
+        .lux-step.on { color: var(--black); }
+        .lux-step.on::after {
+          content: "";
+          display: block;
+          width: 100%;
+          height: 1px;
+          background: var(--gold);
+          margin-top: 0.5rem;
+        }
+        .lux-form-panel h2 {
+          font-size: 2rem;
+          margin-bottom: 2rem;
+        }
+        .lux-form-row {
           display: grid;
-          gap: 0.4rem;
+          grid-template-columns: 1fr 1fr;
+          gap: 2rem;
         }
-        .sidebar-trust li::before { content: "✓ "; color: var(--accent-light); font-weight: 700; }
-        .stepper {
+        .lux-form-note {
+          font-weight: 300;
+          color: var(--stone);
+          margin-bottom: 1.5rem;
+          font-size: 0.92rem;
+        }
+        .lux-form-actions {
           display: flex;
-          gap: 0.5rem;
-          margin-bottom: 1.25rem;
+          gap: 1rem;
           flex-wrap: wrap;
+          margin-top: 1rem;
         }
-        .step {
-          display: flex;
-          align-items: center;
-          gap: 0.4rem;
-          font-size: 0.78rem;
+        .lux-error { color: #9b2c2c; font-size: 0.88rem; margin-top: 1rem; }
+        .lux-form-footer {
+          margin-top: 2rem;
+          font-size: 0.75rem;
           color: var(--muted);
-          font-weight: 500;
+          letter-spacing: 0.08em;
         }
-        .step-num {
-          width: 1.5rem;
-          height: 1.5rem;
-          border-radius: 50%;
-          border: 2px solid var(--border);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 0.7rem;
-          font-weight: 700;
-        }
-        .step.done .step-num, .step.current .step-num {
-          background: linear-gradient(180deg, var(--accent-light), var(--accent-deep));
-          border-color: var(--accent-deep);
-          color: white;
-          box-shadow: 0 3px 10px rgba(29, 78, 216, 0.35);
-        }
-        .step.current { color: var(--text); font-weight: 600; }
-        .book-form h2 { font-size: 1.5rem; margin-bottom: 0.35rem; }
-        .form-desc { color: var(--muted); font-size: 0.92rem; margin-bottom: 1.25rem; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .form-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
-        .error { color: #b33; margin: 0.75rem 0 0; font-size: 0.9rem; }
-        .book-footer-note { margin-top: 1rem; font-size: 0.88rem; color: var(--muted); }
         @media (max-width: 860px) {
-          .book-layout { grid-template-columns: 1fr; }
-          .form-row { grid-template-columns: 1fr; }
+          .lux-book-layout { grid-template-columns: 1fr; }
+          .lux-form-row { grid-template-columns: 1fr; }
         }
       `}</style>
-    </>
+    </div>
   );
 }

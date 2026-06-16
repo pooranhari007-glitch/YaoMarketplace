@@ -4,155 +4,120 @@ import TrustBar from "../components/TrustBar";
 import { IMAGES, PRICING_DEMO } from "../data/demo";
 
 const amenities = [
-  "Private suites with ensuite baths",
-  "Chef-ready kitchen & dining for 12",
-  "Coastal trails & fire pit",
-  "High-speed Wi‑Fi throughout",
-  "Contactless check-in",
-  "Flexible 2-night minimum",
+  "Private suites with ensuite marble baths",
+  "Temperature-controlled wine cellar",
+  "Infinity-edge pool & sun terrace",
+  "Chef's kitchen with premium appointments",
+  "Dedicated concierge on request",
+  "Discreet, contactless arrival",
 ];
-
-const gallery = [IMAGES.stayInterior, IMAGES.stayBedroom, IMAGES.stay];
 
 export default function StayPage() {
   return (
     <>
       <PageHero
-        eyebrow="Overnight stays"
-        title="Rest, recharge, and wake up to the coast"
-        subtitle="Thoughtfully appointed suites for couples, families, and small groups — book direct for transparent nightly rates and instant confirmation."
+        eyebrow="Private stay"
+        title="Sanctuary, refined"
+        subtitle="An intimate residence for those who measure luxury in silence, space, and the quality of what surrounds them."
         image={IMAGES.stay}
-        variant="stay"
-        primaryCta={{ label: "Check dates & book", to: "/book?type=stay" }}
-        secondaryCta={{ label: "View policies", to: "/policies" }}
+        primaryCta={{ label: "Reserve", to: "/book?type=stay" }}
+        secondaryCta={{ label: "Gallery", to: "/gallery" }}
+        compact
       />
-      <TrustBar light />
+      <TrustBar />
 
       <section className="section">
-        <div className="container split-section">
-          <div>
-            <span className="eyebrow">The experience</span>
-            <h2>A boutique stay, not a generic rental</h2>
+        <div className="container lux-editorial">
+          <div className="lux-editorial-text reveal">
+            <span className="eyebrow">The residence</span>
+            <h2>Where every detail<br />speaks quietly</h2>
+            <div className="divider" />
             <p className="lead">
-              Harborview Estate is designed for guests who value privacy, quality, and a
-              personal touch. Every stay includes premium linens, locally sourced welcome
-              amenities, and direct communication with your host.
+              Aurelia&apos;s private suites are appointed with the same care one expects
+              from the world&apos;s finest addresses — natural materials, curated art,
+              and light that moves through the day with intention.
             </p>
-            <ul className="amenity-list">
+            <ul className="lux-list">
               {amenities.map((a) => (
                 <li key={a}>{a}</li>
               ))}
             </ul>
-            <Link to="/book?type=stay" className="btn btn-primary" style={{ marginTop: "1.5rem" }}>
-              From ${PRICING_DEMO.stayNightly}/night — book now
+            <Link to="/book?type=stay" className="btn btn-primary" style={{ marginTop: "2.5rem" }}>
+              From ${PRICING_DEMO.stayNightly} per night
             </Link>
           </div>
-          <div className="image-stack">
-            <img src={IMAGES.stayInterior} alt="Living space" className="stack-main" />
-            <img src={IMAGES.stayBedroom} alt="Bedroom" className="stack-accent" />
+          <div className="lux-editorial-visual reveal">
+            <img src={IMAGES.stayInterior} alt="" className="lux-img-main" />
+            <img src={IMAGES.stayBedroom} alt="" className="lux-img-accent" />
           </div>
         </div>
       </section>
 
-      <section className="section section-alt">
-        <div className="container">
-          <span className="eyebrow">Gallery preview</span>
-          <h2>Spaces guests love</h2>
-          <div className="photo-row">
-            {gallery.map((src, i) => (
-              <div key={i} className="photo-tile" style={{ backgroundImage: `url(${src})` }} />
-            ))}
-          </div>
-          <Link to="/gallery" className="text-link">View full gallery →</Link>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container card highlight-card">
+      <section className="section section-dark">
+        <div className="container lux-banner reveal">
           <div>
-            <h3>Also hosting an event?</h3>
-            <p>
-              Many guests combine an overnight stay with a next-day gathering. Explore our
-              events page for capacity, layouts, and insurance requirements.
-            </p>
+            <span className="eyebrow">Also considering</span>
+            <h2>A private celebration?</h2>
+            <p className="lead">Many guests extend their stay into an unforgettable gathering.</p>
           </div>
-          <Link to="/events" className="btn btn-outline">Events & gatherings</Link>
+          <Link to="/events" className="btn btn-gold">View events</Link>
         </div>
       </section>
 
       <style>{`
-        .split-section {
+        .lux-editorial {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 3rem;
+          gap: 5rem;
           align-items: center;
         }
-        .split-section h2 { font-size: clamp(1.7rem, 3.5vw, 2.4rem); margin-bottom: 1rem; }
-        .amenity-list {
+        .lux-editorial h2 { font-size: clamp(2rem, 4vw, 3rem); }
+        .lux-list {
           list-style: none;
-          margin-top: 1.5rem;
+          margin-top: 2rem;
           display: grid;
-          gap: 0.55rem;
+          gap: 0.85rem;
         }
-        .amenity-list li {
-          padding-left: 1.4rem;
+        .lux-list li {
+          font-size: 0.92rem;
+          font-weight: 300;
+          color: var(--stone);
+          padding-left: 1.5rem;
           position: relative;
-          color: var(--muted);
-          font-size: 0.95rem;
         }
-        .amenity-list li::before {
-          content: "✓";
+        .lux-list li::before {
+          content: "";
           position: absolute;
           left: 0;
-          color: var(--accent-light);
-          font-weight: 700;
+          top: 0.55em;
+          width: 24px;
+          height: 1px;
+          background: var(--gold);
         }
-        .image-stack { position: relative; min-height: 380px; }
-        .stack-main {
-          width: 85%;
-          border-radius: var(--radius-lg);
-          box-shadow: var(--shadow);
+        .lux-editorial-visual { position: relative; min-height: 480px; }
+        .lux-img-main {
+          width: 78%;
           display: block;
+          filter: brightness(0.95);
         }
-        .stack-accent {
+        .lux-img-accent {
           position: absolute;
           right: 0;
-          bottom: -1rem;
-          width: 55%;
-          border-radius: var(--radius);
-          border: 4px solid var(--bg);
-          box-shadow: var(--shadow);
+          bottom: -2rem;
+          width: 52%;
+          border: 4px solid var(--ivory);
         }
-        .photo-row {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1rem;
-          margin: 1.5rem 0;
-        }
-        .photo-tile {
-          aspect-ratio: 4/3;
-          border-radius: var(--radius);
-          background-size: cover;
-          background-position: center;
-        }
-        .text-link { font-weight: 600; font-size: 0.95rem; }
-        .highlight-card {
+        .lux-banner {
           display: flex;
           justify-content: space-between;
           align-items: center;
           gap: 2rem;
           flex-wrap: wrap;
-          padding: 1.5rem;
-          background: linear-gradient(135deg, var(--accent-soft), var(--surface));
-          border-color: var(--border);
-          box-shadow: var(--shadow-shine);
         }
-        .highlight-card h3 { font-size: 1.3rem; margin-bottom: 0.4rem; }
-        .highlight-card p { color: var(--muted); max-width: 48ch; }
+        .lux-banner h2 { font-size: 2rem; color: var(--cream); margin: 0.5rem 0; }
         @media (max-width: 800px) {
-          .split-section { grid-template-columns: 1fr; }
-          .image-stack { min-height: 280px; }
-          .photo-row { grid-template-columns: 1fr; }
+          .lux-editorial { grid-template-columns: 1fr; }
+          .lux-editorial-visual { min-height: 320px; }
         }
       `}</style>
     </>
