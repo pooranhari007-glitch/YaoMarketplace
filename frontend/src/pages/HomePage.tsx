@@ -1,228 +1,152 @@
 import { Link } from "react-router-dom";
-import PageHero from "../components/PageHero";
-import TrustBar from "../components/TrustBar";
-import { IMAGES, PRICING_DEMO, SITE } from "../data/demo";
+import {
+  BookingMixChart,
+  OccupancyChart,
+  Panel,
+  RevenueChart,
+  StatCard,
+} from "../components/DashboardCharts";
+import { PRICING_DEMO, STATS } from "../data/demo";
+
+const recent = [
+  { guest: "Sarah M.", type: "Stay", dates: "Jun 12–14", amount: "$500", status: "Confirmed" },
+  { guest: "Apex Corp", type: "Event", dates: "Jun 18", amount: "$1,500", status: "Pending" },
+  { guest: "James L.", type: "Stay", dates: "Jun 20–22", amount: "$750", status: "Confirmed" },
+  { guest: "Rivera Wedding", type: "Event", dates: "Jul 4", amount: "$4,500", status: "Confirmed" },
+];
 
 export default function HomePage() {
   return (
-    <>
-      <PageHero
-        eyebrow={SITE.location}
-        title="An address reserved for the exceptional"
-        subtitle={`${SITE.name} is a private estate where overnight guests and celebration hosts experience the same standard — understated, impeccable, and entirely yours.`}
-        image={IMAGES.home}
-        primaryCta={{ label: "Reserve", to: "/book" }}
-        secondaryCta={{ label: "Discover", to: "/stay" }}
-      />
-      <TrustBar />
+    <div className="dash-page">
+      <div className="dash-stats-grid">
+        <StatCard label="Occupancy" value={`${STATS.occupancyRate}%`} change={`+${STATS.occupancyChange}%`} up icon="📊" />
+        <StatCard label="Monthly revenue" value={`$${(STATS.monthlyRevenue / 1000).toFixed(1)}k`} change={`+${STATS.revenueChange}%`} up icon="💰" />
+        <StatCard label="Upcoming" value={String(STATS.upcomingBookings)} change="3 this week" up icon="📅" />
+        <StatCard label="Inquiries" value={String(STATS.pendingInquiries)} change="Needs reply" up={false} icon="✉" />
+      </div>
 
-      <section className="section section-cream">
-        <div className="container lux-split reveal">
-          <div>
-            <span className="eyebrow">The estate</span>
-            <h2>Two experiences.<br />One uncompromising standard.</h2>
-            <div className="divider" />
-            <p className="lead">
-              Whether arriving for a restorative escape or orchestrating a private
-              celebration, every detail is considered — from arrival to departure.
-            </p>
-          </div>
-          <div className="lux-stats">
-            <div className="lux-stat">
-              <span className="lux-stat-num">${PRICING_DEMO.stayNightly}</span>
-              <span className="lux-stat-label">From per night</span>
-            </div>
-            <div className="lux-stat">
-              <span className="lux-stat-num">${PRICING_DEMO.eventFrom}</span>
-              <span className="lux-stat-label">Events from</span>
-            </div>
-            <div className="lux-stat">
-              <span className="lux-stat-num">{PRICING_DEMO.depositPercent}%</span>
-              <span className="lux-stat-label">Deposit to confirm</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className="dash-charts-grid">
+        <Panel title="Occupancy trend" subtitle="Stay vs event fill rate by month">
+          <OccupancyChart />
+        </Panel>
+        <Panel title="Revenue" subtitle="Direct booking income">
+          <RevenueChart />
+        </Panel>
+        <Panel title="Booking mix" subtitle="Stays vs events">
+          <BookingMixChart />
+        </Panel>
+      </div>
 
-      <section className="section">
-        <div className="container">
-          <div className="lux-duo">
-            <Link to="/stay" className="lux-duo-card">
-              <div className="lux-duo-img" style={{ backgroundImage: `url(${IMAGES.stayInterior})` }} />
-              <div className="lux-duo-body">
-                <span className="eyebrow">Stay</span>
-                <h3>Private residence</h3>
-                <p>Curated suites, uninterrupted privacy, and the quiet luxury of time well spent.</p>
-                <span className="lux-link">Explore →</span>
-              </div>
-            </Link>
-            <Link to="/events" className="lux-duo-card">
-              <div className="lux-duo-img" style={{ backgroundImage: `url(${IMAGES.eventTable})` }} />
-              <div className="lux-duo-body">
-                <span className="eyebrow">Gather</span>
-                <h3>Private events</h3>
-                <p>Weddings, retreats, and milestone celebrations in a setting worthy of the occasion.</p>
-                <span className="lux-link">Explore →</span>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </section>
+      <div className="dash-bottom-grid">
+        <Panel
+          title="Recent reservations"
+          subtitle="Latest activity"
+          action={<Link to="/book" className="btn btn-ghost" style={{ fontSize: "0.75rem" }}>View all</Link>}
+        >
+          <table className="dash-table">
+            <thead>
+              <tr>
+                <th>Guest</th>
+                <th>Type</th>
+                <th>Dates</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recent.map((r) => (
+                <tr key={r.guest + r.dates}>
+                  <td>{r.guest}</td>
+                  <td><span className={`type-pill ${r.type.toLowerCase()}`}>{r.type}</span></td>
+                  <td>{r.dates}</td>
+                  <td>{r.amount}</td>
+                  <td><span className={`status-pill ${r.status.toLowerCase()}`}>{r.status}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Panel>
 
-      <section className="section section-dark">
-        <div className="container lux-manifesto reveal">
-          <span className="eyebrow">Philosophy</span>
-          <blockquote>
-            &ldquo;Luxury is not excess. It is the absence of compromise — in space,
-            in service, and in the certainty that every moment belongs to you.&rdquo;
-          </blockquote>
-          <div className="lux-manifesto-grid">
-            <div>
-              <h4>Direct reservation</h4>
-              <p>No intermediaries. Transparent pricing. Immediate confirmation.</p>
-            </div>
-            <div>
-              <h4>Discreet management</h4>
-              <p>Calendar synchronisation, concierge support, and white-glove coordination.</p>
-            </div>
-            <div>
-              <h4>Lasting impression</h4>
-              <p>An environment designed to be remembered — and returned to.</p>
-            </div>
+        <div className="dash-quick card">
+          <h3>Quick book</h3>
+          <p>From ${PRICING_DEMO.stayNightly}/night · Events from ${PRICING_DEMO.eventFrom}</p>
+          <div className="dash-quick-btns">
+            <Link to="/book?type=stay" className="btn btn-primary">Reserve stay</Link>
+            <Link to="/book?type=event" className="btn btn-cyan">Reserve event</Link>
           </div>
+          <ul className="dash-quick-list">
+            <li>✓ Real-time availability</li>
+            <li>✓ Stripe secure checkout</li>
+            <li>✓ iCal sync (Airbnb / VRBO)</li>
+          </ul>
         </div>
-      </section>
-
-      <section className="section lux-cta-final">
-        <div className="container lux-cta-final-inner reveal">
-          <h2>Your dates await</h2>
-          <p>Reserve directly. Experience without compromise.</p>
-          <div className="lux-ctas-row">
-            <Link to="/book?type=stay" className="btn btn-primary">Book a stay</Link>
-            <Link to="/book?type=event" className="btn btn-gold">Plan an event</Link>
-          </div>
-        </div>
-      </section>
+      </div>
 
       <style>{`
-        .lux-split {
+        .dash-stats-grid {
           display: grid;
-          grid-template-columns: 1.2fr 1fr;
-          gap: 5rem;
-          align-items: end;
-        }
-        .lux-split h2 { font-size: clamp(2rem, 4vw, 3.2rem); }
-        .lux-stats {
-          display: flex;
-          flex-direction: column;
-          gap: 2.5rem;
-          border-left: 1px solid var(--line);
-          padding-left: 3rem;
-        }
-        .lux-stat-num {
-          display: block;
-          font-family: "Cormorant Garamond", serif;
-          font-size: 2.5rem;
-          color: var(--black);
-          line-height: 1;
-        }
-        .lux-stat-label {
-          font-size: 0.65rem;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: var(--muted);
-          margin-top: 0.5rem;
-        }
-        .lux-duo {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1px;
-          background: var(--line);
-        }
-        .lux-duo-card {
-          display: grid;
-          grid-template-rows: 320px 1fr;
-          background: var(--white);
-          color: inherit;
-          transition: background 0.5s var(--ease);
-          overflow: hidden;
-        }
-        .lux-duo-card:hover { background: var(--cream); }
-        .lux-duo-img {
-          background-size: cover;
-          background-position: center;
-          transition: transform 0.8s var(--ease);
-        }
-        .lux-duo-card:hover .lux-duo-img { transform: scale(1.04); }
-        .lux-duo-body { padding: 2.5rem; }
-        .lux-duo-body h3 { font-size: 1.75rem; margin-bottom: 0.75rem; }
-        .lux-duo-body p {
-          font-weight: 300;
-          color: var(--stone);
-          font-size: 0.95rem;
-          margin-bottom: 1.5rem;
-          line-height: 1.7;
-        }
-        .lux-link {
-          font-size: 0.65rem;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: var(--gold);
-          font-weight: 500;
-        }
-        .lux-manifesto blockquote {
-          font-family: "Cormorant Garamond", serif;
-          font-size: clamp(1.5rem, 3vw, 2.25rem);
-          font-weight: 400;
-          font-style: italic;
-          line-height: 1.5;
-          color: var(--cream);
-          max-width: 28ch;
-          margin: 1.5rem 0 4rem;
-        }
-        .lux-manifesto-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 3rem;
-          padding-top: 3rem;
-          border-top: 1px solid var(--line-light);
-        }
-        .lux-manifesto-grid h4 {
-          font-family: "Inter", sans-serif;
-          font-size: 0.65rem;
-          font-weight: 500;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: var(--gold);
-          margin-bottom: 0.75rem;
-        }
-        .lux-manifesto-grid p {
-          font-weight: 300;
-          font-size: 0.9rem;
-          color: rgba(255,255,255,0.45);
-          line-height: 1.7;
-        }
-        .lux-cta-final {
-          text-align: center;
-          background: var(--cream);
-        }
-        .lux-cta-final h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 0.75rem; }
-        .lux-cta-final p {
-          font-weight: 300;
-          color: var(--stone);
-          margin-bottom: 2.5rem;
-        }
-        .lux-ctas-row {
-          display: flex;
-          justify-content: center;
+          grid-template-columns: repeat(4, 1fr);
           gap: 1rem;
-          flex-wrap: wrap;
+          margin-bottom: 1.25rem;
         }
-        @media (max-width: 900px) {
-          .lux-split, .lux-duo, .lux-manifesto-grid { grid-template-columns: 1fr; }
-          .lux-stats { border-left: none; padding-left: 0; flex-direction: row; flex-wrap: wrap; gap: 2rem; }
+        .dash-charts-grid {
+          display: grid;
+          grid-template-columns: 1.2fr 1.2fr 0.8fr;
+          gap: 1rem;
+          margin-bottom: 1.25rem;
+        }
+        .dash-bottom-grid {
+          display: grid;
+          grid-template-columns: 1.5fr 0.7fr;
+          gap: 1rem;
+        }
+        .dash-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 0.82rem;
+        }
+        .dash-table th {
+          text-align: left;
+          padding: 0.5rem 0.75rem;
+          color: var(--dim);
+          font-weight: 600;
+          font-size: 0.72rem;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          border-bottom: 1px solid var(--border);
+        }
+        .dash-table td {
+          padding: 0.65rem 0.75rem;
+          border-bottom: 1px solid var(--border);
+          color: var(--muted);
+        }
+        .type-pill, .status-pill {
+          display: inline-block;
+          padding: 0.15rem 0.45rem;
+          border-radius: 4px;
+          font-size: 0.7rem;
+          font-weight: 600;
+        }
+        .type-pill.stay { background: rgba(99,102,241,0.2); color: #a5b4fc; }
+        .type-pill.event { background: rgba(34,211,238,0.15); color: #67e8f9; }
+        .status-pill.confirmed { background: rgba(52,211,153,0.15); color: var(--green); }
+        .status-pill.pending { background: rgba(251,191,36,0.15); color: var(--amber); }
+        .dash-quick h3 { font-size: 0.95rem; margin-bottom: 0.35rem; }
+        .dash-quick p { font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem; }
+        .dash-quick-btns { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+        .dash-quick-btns .btn { width: 100%; }
+        .dash-quick-list {
+          list-style: none;
+          font-size: 0.78rem;
+          color: var(--dim);
+          display: grid;
+          gap: 0.35rem;
+        }
+        @media (max-width: 1100px) {
+          .dash-stats-grid { grid-template-columns: repeat(2, 1fr); }
+          .dash-charts-grid, .dash-bottom-grid { grid-template-columns: 1fr; }
         }
       `}</style>
-    </>
+    </div>
   );
 }

@@ -1,42 +1,55 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { SITE } from "../data/demo";
+import { StatCard } from "../components/DashboardCharts";
 
 export default function BookSuccessPage() {
   const [params] = useSearchParams();
   const id = params.get("booking_id");
 
   return (
-    <div className="lux-success">
-      <div className="container lux-success-inner reveal">
-        <span className="eyebrow">Confirmed</span>
-        <h1>Thank you</h1>
-        <div className="divider" />
-        <p>
-          {id
-            ? `Your reservation ${id} has been received. A confirmation shall arrive shortly.`
-            : "Your reservation has been received. We look forward to welcoming you."}
-        </p>
-        <Link to="/" className="btn btn-primary" style={{ marginTop: "2.5rem" }}>
-          Return to {SITE.shortName}
-        </Link>
+    <div className="success-dash">
+      <div className="success-card card">
+        <div className="success-icon">✓</div>
+        <h2>Booking confirmed</h2>
+        <p>{id ? `Reservation #${id} is on the books.` : "Your reservation has been received."}</p>
+        <div className="success-stats">
+          <StatCard label="Status" value="Confirmed" icon="✓" />
+          <StatCard label="Next" value="Email sent" icon="✉" />
+        </div>
+        <Link to="/" className="btn btn-primary">Back to dashboard</Link>
       </div>
       <style>{`
-        .lux-success {
-          min-height: 80vh;
+        .success-dash {
+          display: flex;
+          justify-content: center;
+          padding: 2rem 0;
+        }
+        .success-card {
+          max-width: 480px;
+          width: 100%;
+          text-align: center;
+          padding: 2rem;
+        }
+        .success-icon {
+          width: 56px;
+          height: 56px;
+          margin: 0 auto 1rem;
+          background: rgba(52, 211, 153, 0.15);
+          color: var(--green);
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 6rem 0;
-          margin-top: 72px;
-          text-align: center;
+          font-size: 1.5rem;
+          font-weight: 700;
         }
-        .lux-success-inner { max-width: 480px; }
-        .lux-success h1 { font-size: 3.5rem; margin-bottom: 0; }
-        .lux-success p {
-          font-weight: 300;
-          color: var(--stone);
-          line-height: 1.8;
-          font-size: 1.05rem;
+        .success-card h2 { margin-bottom: 0.5rem; }
+        .success-card p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .success-stats {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.75rem;
+          margin-bottom: 1.5rem;
+          text-align: left;
         }
       `}</style>
     </div>

@@ -21,110 +21,52 @@ export default function ChatWidget() {
       });
       setMessages([...next, { role: "assistant", content: res.reply }]);
     } catch {
-      setMessages([
-        ...next,
-        { role: "assistant", content: "Our concierge is momentarily unavailable. Please try again." },
-      ]);
+      setMessages([...next, { role: "assistant", content: "Unavailable right now. Try again." }]);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className={`lux-chat ${open ? "open" : ""}`}>
+    <div className={`dash-chat ${open ? "open" : ""}`}>
       {open && (
-        <div className="lux-chat-panel">
-          <div className="lux-chat-head">
-            <span>Concierge</span>
-            <button type="button" onClick={() => setOpen(false)} aria-label="Close">×</button>
+        <div className="dash-chat-panel card">
+          <div className="dash-chat-head">
+            <span>AI Assistant</span>
+            <button type="button" onClick={() => setOpen(false)}>×</button>
           </div>
-          <div className="lux-chat-body">
-            {messages.length === 0 && (
-              <p className="lux-chat-empty">How may we assist you?</p>
-            )}
+          <div className="dash-chat-msgs">
+            {messages.length === 0 && <p className="empty">Ask about stays, events, or booking.</p>}
             {messages.map((m, i) => (
-              <div key={i} className={`lux-msg ${m.role}`}>{m.content}</div>
+              <div key={i} className={`msg ${m.role}`}>{m.content}</div>
             ))}
           </div>
-          <div className="lux-chat-foot">
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && send()}
-              placeholder="Your message"
-              disabled={loading}
-            />
-            <button type="button" className="btn btn-primary" onClick={send} disabled={loading}>
-              Send
-            </button>
+          <div className="dash-chat-foot">
+            <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="Message…" disabled={loading} />
+            <button type="button" className="btn btn-primary" onClick={send} disabled={loading}>Send</button>
           </div>
         </div>
       )}
-      <button type="button" className="lux-chat-toggle btn btn-primary" onClick={() => setOpen(!open)}>
-        {open ? "Close" : "Concierge"}
+      <button type="button" className="btn btn-primary dash-chat-btn" onClick={() => setOpen(!open)}>
+        {open ? "Close" : "AI Chat"}
       </button>
       <style>{`
-        .lux-chat {
-          position: fixed;
-          bottom: 2rem;
-          right: 2rem;
-          z-index: 300;
+        .dash-chat { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 300; }
+        .dash-chat-panel { width: min(320px, calc(100vw - 2rem)); margin-bottom: 0.5rem; padding: 0; overflow: hidden; }
+        .dash-chat-head {
+          display: flex; justify-content: space-between; align-items: center;
+          padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
+          font-size: 0.8rem; font-weight: 600;
         }
-        .lux-chat-panel {
-          width: min(340px, calc(100vw - 2rem));
-          margin-bottom: 0.75rem;
-          background: var(--white);
-          border: 1px solid var(--line);
-        }
-        .lux-chat-head {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 1rem 1.25rem;
-          background: var(--black);
-          color: var(--white);
-          font-size: 0.62rem;
-          letter-spacing: 0.22em;
-          text-transform: uppercase;
-        }
-        .lux-chat-head button {
-          background: none;
-          border: none;
-          color: var(--white);
-          font-size: 1.25rem;
-          cursor: pointer;
-          opacity: 0.6;
-        }
-        .lux-chat-body {
-          height: 260px;
-          overflow-y: auto;
-          padding: 1.25rem;
-        }
-        .lux-chat-empty {
-          font-size: 0.88rem;
-          font-weight: 300;
-          color: var(--muted);
-          font-style: italic;
-        }
-        .lux-msg {
-          font-size: 0.88rem;
-          font-weight: 300;
-          line-height: 1.6;
-          margin-bottom: 0.75rem;
-          padding-bottom: 0.75rem;
-          border-bottom: 1px solid var(--line);
-        }
-        .lux-msg.user { color: var(--black); }
-        .lux-msg.assistant { color: var(--stone); }
-        .lux-chat-foot {
-          display: flex;
-          gap: 0.5rem;
-          padding: 1rem;
-          border-top: 1px solid var(--line);
-        }
-        .lux-chat-foot input { flex: 1; font-size: 0.85rem; }
-        .lux-chat-foot .btn { padding: 0.65rem 1rem; font-size: 0.58rem; }
-        .lux-chat-toggle { font-size: 0.6rem; padding: 0.7rem 1.1rem; }
+        .dash-chat-head button { background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; }
+        .dash-chat-msgs { height: 220px; overflow-y: auto; padding: 0.75rem; }
+        .empty { font-size: 0.8rem; color: var(--dim); }
+        .msg { font-size: 0.82rem; margin-bottom: 0.5rem; padding: 0.5rem 0.65rem; border-radius: 8px; }
+        .msg.user { background: rgba(99,102,241,0.2); margin-left: 1rem; }
+        .msg.assistant { background: var(--bg-panel); color: var(--muted); }
+        .dash-chat-foot { display: flex; gap: 0.4rem; padding: 0.6rem; border-top: 1px solid var(--border); }
+        .dash-chat-foot input { flex: 1; font-size: 0.8rem; }
+        .dash-chat-btn { font-size: 0.75rem; }
       `}</style>
     </div>
   );
