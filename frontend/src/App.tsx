@@ -3,9 +3,8 @@ import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
 import StayPage from "./pages/StayPage";
 import EventsPage from "./pages/EventsPage";
-import StaticPage from "./pages/StaticPage";
+import ContentPage from "./pages/ContentPage";
 import BookPage from "./pages/BookPage";
-import BookSuccessPage from "./pages/BookSuccessPage";
 
 export default function App() {
   return (
@@ -14,11 +13,10 @@ export default function App() {
         <Route index element={<HomePage />} />
         <Route path="stay" element={<StayPage />} />
         <Route path="events" element={<EventsPage />} />
-        <Route path="gallery" element={<StaticPage slug="gallery" />} />
-        <Route path="policies" element={<StaticPage slug="policies" />} />
-        <Route path="faq" element={<StaticPage slug="faq" />} />
+        <Route path="gallery" element={<ContentPage slug="gallery" />} />
+        <Route path="policies" element={<ContentPage slug="policies" />} />
+        <Route path="faq" element={<ContentPage slug="faq" />} />
         <Route path="book" element={<BookPage />} />
-        <Route path="book/success" element={<BookSuccessPage />} />
       </Route>
     </Routes>
   );

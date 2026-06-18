@@ -1,38 +1,20 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: booking-platform-db
+    container_name: direct-booking-db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: booking_platform
+      POSTGRES_DB: direct_booking
     ports:
       - "5434:5432"
     volumes:
-      - booking_pgdata:/var/lib/postgresql/data
+      - m1_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d booking_platform"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d direct_booking"]
       interval: 5s
       timeout: 5s
       retries: 5
 
-  api:
-    build: ./backend
-    container_name: booking-platform-api
-    ports:
-      - "8000:8000"
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/booking_platform
-      SECRET_KEY: dev-secret-change-in-production
-      CORS_ORIGINS: http://localhost:5173,http://localhost:5174,https://pooranhari007-glitch.github.io
-    volumes:
-      - ./backend:/app
-      - booking_uploads:/app/uploads
-    depends_on:
-      db:
-        condition: service_healthy
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-
 volumes:
-  booking_pgdata:
-  booking_uploads:
+  m1_pgdata:

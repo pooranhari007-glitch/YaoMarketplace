@@ -3,18 +3,18 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_admin
 from app.core.database import get_db
-from app.models.content import ContentPage, PageSlug
-from app.schemas.content import ContentPageResponse, ContentPageUpdate
+from app.models import ContentPage, PageSlug
+from app.schemas import ContentPageOut, ContentPageUpdate
 
 router = APIRouter(prefix="/content", tags=["content"])
 
 
-@router.get("", response_model=list[ContentPageResponse])
+@router.get("", response_model=list[ContentPageOut])
 def list_pages(db: Session = Depends(get_db)):
     return db.query(ContentPage).order_by(ContentPage.slug).all()
 
 
-@router.get("/{slug}", response_model=ContentPageResponse)
+@router.get("/{slug}", response_model=ContentPageOut)
 def get_page(slug: PageSlug, db: Session = Depends(get_db)):
     page = db.query(ContentPage).filter(ContentPage.slug == slug).first()
     if not page:
@@ -22,7 +22,7 @@ def get_page(slug: PageSlug, db: Session = Depends(get_db)):
     return page
 
 
-@router.patch("/{slug}", response_model=ContentPageResponse)
+@router.patch("/{slug}", response_model=ContentPageOut)
 def update_page(
     slug: PageSlug,
     payload: ContentPageUpdate,

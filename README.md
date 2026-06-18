@@ -1,130 +1,49 @@
 # Direct Booking Platform
 
-A full-stack direct booking system for property stays and private events, based on the project proposal (React + Python).
+Fresh **Milestone 1** build — public site + API + PostgreSQL.
 
-## Milestone 1 status ✅
+## Stack
 
-M1 (Foundation & Public Site) is complete. See [docs/MILESTONES.md](docs/MILESTONES.md) and [docs/DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md).
-
-```bash
-# Start PostgreSQL (Docker)
-docker compose up -d db
-
-# API uses PostgreSQL on localhost:5434
-cd backend && source .venv/bin/activate && uvicorn app.main:app --reload
-
-# Public site (CMS content from API)
-cd frontend && npm run dev
-```
-
-**Live staging:** https://pooranhari007-glitch.github.io/YaoMarketplace/  
-**Admin (M2):** `admin@example.com` / `admin123`
-
-## Architecture
-
-| Layer | Stack | Port |
-|-------|-------|------|
+| Layer | Tech | Port |
+|-------|------|------|
 | Public site | React + Vite | 5173 |
-| Admin dashboard | React + Vite | 5174 |
-| API | FastAPI + PostgreSQL | 8000 |
-
-## Features (MVP scaffold)
-
-**Public site**
-- Dynamic CMS pages: Home, Stay, Events, Gallery, Policies, FAQ, Book
-- Stay vs event booking flows with live pricing quotes
-- Stripe checkout (when keys are configured)
-- COI upload + insurance purchase link
-- AI chat assistant (OpenAI when key is set)
-
-**Backend**
-- REST API with JWT admin auth
-- Booking & pricing engine (nightly + event rates, deposits)
-- Stripe webhooks
-- iCal sync for Airbnb / VRBO / Peerspace
-- Inquiry & insurance document handling
-
-**Admin dashboard**
-- Owner login
-- CMS content editor
-- Bookings, inquiries, insurance approval
-- Calendar blocking + external iCal sync
+| API | FastAPI | 8000 |
+| Database | PostgreSQL 16 (Docker) | 5434 |
 
 ## Quick start
 
-### 1. API (no Docker required)
-
-Uses **SQLite** by default so you don't need Postgres or Docker running locally.
-
 ```bash
+# 1. Database
+docker compose up -d db
+
+# 2. API
 cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
 uvicorn app.main:app --reload
-```
 
-**Optional — Postgres via Docker** (start Docker Desktop first):
-
-```bash
-docker compose up -d db
-# In backend/.env set:
-# DATABASE_URL=postgresql://postgres:postgres@localhost:5432/booking_platform
-```
-
-Default admin: `admin@example.com` / `admin123`
-
-### 2. Public site
-
-```bash
+# 3. Public site
 cd frontend
 npm install
-cp .env.example .env
 npm run dev
 ```
 
-### 3. Admin dashboard
+- **Site:** http://localhost:5173  
+- **API docs:** http://localhost:8000/docs  
+- **Admin login:** `admin@example.com` / `admin123`
 
-```bash
-cd admin
-npm install
-cp .env.example .env
-npm run dev
-```
+## Milestone plan
 
-Or run everything with Docker:
+See [docs/MILESTONES.md](docs/MILESTONES.md) — 3 milestones, M1 in progress.
 
-```bash
-docker compose up
-```
+## M1 scope
 
-## Environment variables
+- PostgreSQL: users, settings, content pages, media
+- CMS API + JWT admin auth
+- Public pages: Home, Stay, Events, Gallery, Policies, FAQ
+- SEO meta from API
+- Staging: GitHub Pages (frontend)
 
-See `backend/.env.example`, `frontend/.env.example`, and `admin/.env.example`.
-
-Required for production:
-- `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PUBLISHABLE_KEY`
-- `OPENAI_API_KEY` (for AI chat)
-- `SECRET_KEY` (strong random value)
-- SMTP settings for email notifications (to be wired)
-
-## API docs
-
-With the API running: http://localhost:8000/docs
-
-## Project structure
-
-```
-├── backend/          # FastAPI API
-├── frontend/         # Public React site
-├── admin/            # Owner admin dashboard
-└── docker-compose.yml
-```
-
-## Next steps
-
-- [ ] Email notification service (booking confirmations, inquiry alerts)
-- [ ] Rich CMS (WYSIWYG, image gallery upload)
-- [ ] Stripe Elements embedded checkout
-- [ ] ID verification integration
-- [ ] Analytics dashboard
+**M2 adds:** booking engine, Stripe, admin dashboard  
+**M3 adds:** AI chat, polish, production launch

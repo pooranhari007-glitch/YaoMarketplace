@@ -1,9 +1,38 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+
+from app.models import PageSlug
 
 
-class SiteSettingsResponse(BaseModel):
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+
+class ContentPageOut(BaseModel):
+    slug: PageSlug
+    title: str
+    body: str
+    meta_description: str
+    hero_image_url: str
+
+    model_config = {"from_attributes": True}
+
+
+class ContentPageUpdate(BaseModel):
+    title: Optional[str] = None
+    body: Optional[str] = None
+    meta_description: Optional[str] = None
+    hero_image_url: Optional[str] = None
+
+
+class SiteSettingsOut(BaseModel):
     site_name: str
     short_name: str
     tagline: str
@@ -51,3 +80,14 @@ class SiteSettingsUpdate(BaseModel):
     highlights: Optional[list[dict]] = None
     amenities_stay: Optional[list[str]] = None
     event_types: Optional[list[dict]] = None
+
+
+class MediaOut(BaseModel):
+    id: int
+    title: str
+    alt_text: str
+    url: str
+    category: str
+    sort_order: int
+
+    model_config = {"from_attributes": True}
