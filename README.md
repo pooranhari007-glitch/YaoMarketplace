@@ -2,6 +2,24 @@
 
 A full-stack direct booking system for property stays and private events, based on the project proposal (React + Python).
 
+## Milestone 1 status ✅
+
+M1 (Foundation & Public Site) is complete. See [docs/MILESTONES.md](docs/MILESTONES.md) and [docs/DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md).
+
+```bash
+# Start PostgreSQL (Docker)
+docker compose up -d db
+
+# API uses PostgreSQL on localhost:5434
+cd backend && source .venv/bin/activate && uvicorn app.main:app --reload
+
+# Public site (CMS content from API)
+cd frontend && npm run dev
+```
+
+**Live staging:** https://pooranhari007-glitch.github.io/YaoMarketplace/  
+**Admin (M2):** `admin@example.com` / `admin123`
+
 ## Architecture
 
 | Layer | Stack | Port |

@@ -1,22 +1,30 @@
 import { Link } from "react-router-dom";
+import PageMeta from "../components/PageMeta";
 import AvailabilityDashboard from "../components/public/AvailabilityDashboard";
 import LiveQuoteWidget from "../components/public/LiveQuoteWidget";
-import { EVENT_TYPES, GALLERY, PRICING_DEMO, PROPERTY } from "../data/demo";
+import { useGallery, usePageContent, useSiteConfig } from "../hooks/useSiteConfig";
+import { FALLBACK_GALLERY } from "../data/demo";
 
 export default function EventsPage() {
+  const { site } = useSiteConfig();
+  const { page } = usePageContent("events");
+  const gallery = useGallery();
+  const images = gallery.length ? gallery : FALLBACK_GALLERY;
+
   return (
     <div className="container">
+      <PageMeta title={page?.title || "Private Events"} description={page?.meta_description} />
       <section className="page-hero">
         <span className="eyebrow">Private events</span>
-        <h1>Your celebration, your way</h1>
-        <p>Weddings, corporate retreats, reunions, and milestone gatherings — indoor-outdoor spaces for up to {PROPERTY.eventCapacity} guests on six private acres.</p>
+        <h1>{page?.title || "Your celebration, your way"}</h1>
+        <p>{page?.body}</p>
       </section>
 
       <div className="events-hero card">
-        <div className="events-hero-img" style={{ background: GALLERY[1].tone }} />
+        <div className="events-hero-img" style={{ backgroundImage: `url("${page?.hero_image_url || images[1]?.url}")`, backgroundSize: "cover", backgroundPosition: "center" }} />
         <div className="events-hero-copy">
-          <h2>{`From $${PRICING_DEMO.eventFrom.toLocaleString()}`}</h2>
-          <p>Full-day and multi-day packages. {PRICING_DEMO.depositPercent}% deposit secures your date. Certificate of insurance required for all events.</p>
+          <h2>{`From $${site.event_from.toLocaleString()}`}</h2>
+          <p>Full-day and multi-day packages. {site.deposit_percent}% deposit secures your date. Certificate of insurance required for all events.</p>
           <Link to="/book?type=event" className="btn btn-accent">Request your date</Link>
         </div>
       </div>
@@ -26,7 +34,7 @@ export default function EventsPage() {
           <section className="card">
             <h2>Event types we host</h2>
             <div className="event-list">
-              {EVENT_TYPES.map((e) => (
+              {site.event_types.map((e) => (
                 <div key={e.title} className="event-item">
                   <div>
                     <strong>{e.title}</strong>
@@ -74,15 +82,8 @@ export default function EventsPage() {
           flex-direction: column;
           justify-content: center;
         }
-        .events-hero-copy h2 {
-          font-size: 1.75rem;
-          margin-bottom: 0.75rem;
-        }
-        .events-hero-copy p {
-          color: var(--text-soft);
-          margin-bottom: 1.5rem;
-          line-height: 1.7;
-        }
+        .events-hero-copy h2 { font-size: 1.75rem; margin-bottom: 0.75rem; }
+        .events-hero-copy p { color: var(--text-soft); margin-bottom: 1.5rem; line-height: 1.7; }
         .events-layout {
           display: grid;
           grid-template-columns: 1fr 340px;
@@ -139,10 +140,7 @@ export default function EventsPage() {
           font-size: 0.75rem;
           font-weight: 700;
         }
-        .events-sidebar {
-          position: sticky;
-          top: 5rem;
-        }
+        .events-sidebar { position: sticky; top: 5rem; }
         @media (max-width: 900px) {
           .events-hero { grid-template-columns: 1fr; }
           .events-layout { grid-template-columns: 1fr; }

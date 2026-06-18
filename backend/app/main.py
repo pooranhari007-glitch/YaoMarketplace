@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.api.routes import auth, bookings, calendar, chat, content, inquiries, insurance, webhooks
+from app.api.routes import auth, bookings, calendar, chat, content, inquiries, insurance, media, settings as settings_routes, webhooks
 from app.config import settings
 from app.core.database import Base, engine
 from app.seed import seed_database
@@ -32,6 +32,8 @@ app.add_middleware(
 
 prefix = settings.api_prefix
 
+app.include_router(settings_routes.router, prefix=prefix)
+app.include_router(media.router, prefix=prefix)
 app.include_router(auth.router, prefix=prefix)
 app.include_router(content.router, prefix=prefix)
 app.include_router(bookings.router, prefix=prefix)

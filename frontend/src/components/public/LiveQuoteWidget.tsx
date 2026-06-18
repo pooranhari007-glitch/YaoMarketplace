@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../../api/client";
-import { PRICING_DEMO } from "../../data/demo";
+import { useSiteConfig } from "../../hooks/useSiteConfig";
 import type { BookingType, Quote } from "../../types";
 
 export default function LiveQuoteWidget({ defaultType = "stay" }: { defaultType?: BookingType }) {
+  const { site } = useSiteConfig();
   const [type, setType] = useState<BookingType>(defaultType);
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
@@ -79,14 +80,14 @@ export default function LiveQuoteWidget({ defaultType = "stay" }: { defaultType?
             <strong>${quote.deposit_amount}</strong>
           </div>
           {type === "stay" && quote.nights && (
-            <p className="bw-meta">{quote.nights} nights · ${PRICING_DEMO.stayNightly}/night</p>
+            <p className="bw-meta">{quote.nights} nights · ${site.stay_nightly}/night</p>
           )}
           <Link to={bookUrl} className="btn btn-accent" style={{ width: "100%", marginTop: "0.75rem" }}>
             Continue to book
           </Link>
         </div>
       ) : (
-        <p className="bw-hint">From ${PRICING_DEMO.stayNightly}/night · Events from ${PRICING_DEMO.eventFrom.toLocaleString()}</p>
+        <p className="bw-hint">From ${site.stay_nightly}/night · Events from ${site.event_from.toLocaleString()}</p>
       )}
 
       <style>{`

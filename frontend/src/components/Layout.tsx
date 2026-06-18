@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import ChatWidget from "./ChatWidget";
-import { SITE } from "../data/demo";
+import { useSiteConfig } from "../hooks/useSiteConfig";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -13,14 +13,15 @@ const nav = [
 export default function Layout() {
   const { pathname } = useLocation();
   const isHome = pathname === "/";
+  const { site } = useSiteConfig();
 
   return (
     <div className="site">
       <header className={`site-header ${isHome ? "site-header--hero" : ""}`}>
         <div className="container site-header-inner">
           <Link to="/" className="site-logo">
-            <span className="site-logo-mark">H</span>
-            <span>{SITE.shortName}</span>
+            <span className="site-logo-mark">{site.short_name.charAt(0)}</span>
+            <span>{site.short_name}</span>
           </Link>
           <nav className="site-nav">
             {nav.map((item) => (
@@ -40,9 +41,9 @@ export default function Layout() {
       <footer className="site-footer">
         <div className="container site-footer-grid">
           <div>
-            <strong className="site-footer-brand">{SITE.name}</strong>
-            <p>{SITE.location}</p>
-            <p className="site-footer-contact">{SITE.email} · {SITE.phone}</p>
+            <strong className="site-footer-brand">{site.site_name}</strong>
+            <p>{site.location}</p>
+            <p className="site-footer-contact">{site.email} · {site.phone}</p>
           </div>
           <div className="site-footer-links">
             <Link to="/stay">Overnight stays</Link>
@@ -52,7 +53,7 @@ export default function Layout() {
           </div>
         </div>
         <div className="container site-footer-bottom">
-          <span>© {new Date().getFullYear()} {SITE.name}</span>
+          <span>© {new Date().getFullYear()} {site.site_name}</span>
           <span>No platform fees · Direct booking only</span>
         </div>
       </footer>
@@ -107,10 +108,7 @@ export default function Layout() {
           border-radius: 50%;
           font-size: 0.95rem;
         }
-        .site-nav {
-          display: flex;
-          gap: 1.75rem;
-        }
+        .site-nav { display: flex; gap: 1.75rem; }
         .site-nav a {
           font-size: 0.88rem;
           font-weight: 500;
@@ -142,15 +140,8 @@ export default function Layout() {
         }
         .site-footer p { font-size: 0.9rem; opacity: 0.8; }
         .site-footer-contact { margin-top: 0.75rem; font-size: 0.82rem !important; }
-        .site-footer-links {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-        .site-footer-links a {
-          color: rgba(255,255,255,0.75);
-          font-size: 0.88rem;
-        }
+        .site-footer-links { display: flex; flex-direction: column; gap: 0.5rem; }
+        .site-footer-links a { color: rgba(255,255,255,0.75); font-size: 0.88rem; }
         .site-footer-links a:hover { color: #fff; }
         .site-footer-bottom {
           display: flex;

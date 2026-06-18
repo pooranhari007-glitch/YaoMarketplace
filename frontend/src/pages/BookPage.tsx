@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { api } from "../api/client";
-import { PRICING_DEMO } from "../data/demo";
+import { useSiteConfig } from "../hooks/useSiteConfig";
 import type { BookingType, CheckoutResult, Quote } from "../types";
 
 export default function BookPage() {
@@ -21,6 +21,8 @@ export default function BookPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [coiFile, setCoiFile] = useState<File | null>(null);
+
+  const { site } = useSiteConfig();
 
   useEffect(() => {
     const t = params.get("type");
@@ -177,9 +179,9 @@ export default function BookPage() {
               <div className="quote-line"><span>Total</span><strong>${quote.total_amount}</strong></div>
               <div className="quote-line accent"><span>Deposit today</span><strong>${quote.deposit_amount}</strong></div>
               {bookingType === "stay" && quote.nights && (
-                <div className="quote-line dim"><span>{quote.nights} nights</span><span>${PRICING_DEMO.stayNightly}/night</span></div>
+                <div className="quote-line dim"><span>{quote.nights} nights</span><span>${site.stay_nightly}/night</span></div>
               )}
-              <p className="quote-note">{PRICING_DEMO.depositPercent}% deposit due now. Balance before arrival.</p>
+              <p className="quote-note">{site.deposit_percent}% deposit due now. Balance before arrival.</p>
             </>
           ) : (
             <p className="hint">Select your dates to see live pricing.</p>

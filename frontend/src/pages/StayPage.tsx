@@ -1,46 +1,49 @@
 import { Link } from "react-router-dom";
+import PageMeta from "../components/PageMeta";
 import AvailabilityDashboard from "../components/public/AvailabilityDashboard";
 import LiveQuoteWidget from "../components/public/LiveQuoteWidget";
-import { AMENITIES_STAY, GALLERY, PRICING_DEMO, PROPERTY } from "../data/demo";
+import { useGallery, usePageContent, useSiteConfig } from "../hooks/useSiteConfig";
+import { FALLBACK_GALLERY } from "../data/demo";
 
 export default function StayPage() {
+  const { site } = useSiteConfig();
+  const { page } = usePageContent("stay");
+  const gallery = useGallery();
+  const images = gallery.length ? gallery : FALLBACK_GALLERY;
+
   return (
     <div className="container">
+      <PageMeta title={page?.title || "Overnight Stays"} description={page?.meta_description} />
       <section className="page-hero">
         <span className="eyebrow">Overnight stays</span>
-        <h1>A private home, not a hotel</h1>
-        <p>Four ensuite suites on six acres — wake to forest light, cook together, walk to the shoreline. Book direct and skip the platform markup.</p>
+        <h1>{page?.title || "A private home, not a hotel"}</h1>
+        <p>{page?.body}</p>
       </section>
 
       <div className="stay-layout">
         <div className="stay-main">
           <div className="stay-gallery">
-            <div className="stay-gallery-main" style={{ background: GALLERY[3].tone }} />
+            <div className="stay-gallery-main" style={{ backgroundImage: `url("${page?.hero_image_url || images[0]?.url}")`, backgroundSize: "cover", backgroundPosition: "center" }} />
             <div className="stay-gallery-side">
-              <div style={{ background: GALLERY[0].tone }} />
-              <div style={{ background: GALLERY[5].tone }} />
+              <div style={{ backgroundImage: `url("${images[0]?.url}")`, backgroundSize: "cover", backgroundPosition: "center" }} />
+              <div style={{ backgroundImage: `url("${images[5]?.url || images[1]?.url}")`, backgroundSize: "cover", backgroundPosition: "center" }} />
             </div>
           </div>
 
           <section className="stay-details card">
             <h2>The property</h2>
             <div className="stay-stats">
-              <div><strong>{PROPERTY.bedrooms}</strong> bedrooms</div>
-              <div><strong>{PROPERTY.sleeps}</strong> guests</div>
-              <div><strong>{PROPERTY.acres}</strong> acres</div>
-              <div><strong>{PROPERTY.rating}</strong> ★ ({PROPERTY.reviews} reviews)</div>
+              <div><strong>{site.bedrooms}</strong> bedrooms</div>
+              <div><strong>{site.sleeps}</strong> guests</div>
+              <div><strong>{site.acres}</strong> acres</div>
+              <div><strong>{site.rating}</strong> ★ ({site.reviews} reviews)</div>
             </div>
-            <p className="stay-desc">
-              Harborview is designed for groups who want space, privacy, and nature — without sacrificing comfort.
-              Each suite has its own bath, the kitchen is fully stocked for serious cooking, and the trails lead
-              straight to a quiet stretch of coast.
-            </p>
           </section>
 
           <section className="card">
             <h2>What's included</h2>
             <ul className="amenity-grid">
-              {AMENITIES_STAY.map((a) => (
+              {site.amenities_stay.map((a) => (
                 <li key={a}>{a}</li>
               ))}
             </ul>
@@ -56,8 +59,8 @@ export default function StayPage() {
         <aside className="stay-sidebar">
           <LiveQuoteWidget />
           <div className="stay-sidebar-note card">
-            <strong>${PRICING_DEMO.stayNightly}/night</strong>
-            <p>{PRICING_DEMO.minStay}-night minimum · {PRICING_DEMO.depositPercent}% deposit to confirm</p>
+            <strong>${site.stay_nightly}/night</strong>
+            <p>{site.min_stay}-night minimum · {site.deposit_percent}% deposit to confirm</p>
             <Link to="/book?type=stay" className="btn btn-primary" style={{ width: "100%" }}>Check dates & book</Link>
           </div>
         </aside>
@@ -81,24 +84,17 @@ export default function StayPage() {
         .stay-gallery-main { border-radius: var(--radius-lg); }
         .stay-gallery-side { display: flex; flex-direction: column; gap: 0.75rem; }
         .stay-gallery-side div { flex: 1; border-radius: var(--radius); }
-        .stay-details h2, .card h2 {
-          font-size: 1.35rem;
-          margin-bottom: 1rem;
-        }
+        .stay-details h2, .card h2 { font-size: 1.35rem; margin-bottom: 1rem; }
         .stay-stats {
           display: flex;
           flex-wrap: wrap;
           gap: 1.5rem;
-          margin-bottom: 1.25rem;
-          padding-bottom: 1.25rem;
-          border-bottom: 1px solid var(--border);
         }
         .stay-stats strong {
           font-family: var(--font-display);
           font-size: 1.25rem;
           margin-right: 0.25rem;
         }
-        .stay-desc { color: var(--text-soft); line-height: 1.75; }
         .amenity-grid {
           list-style: none;
           display: grid;
@@ -118,11 +114,7 @@ export default function StayPage() {
           color: var(--green);
           font-weight: 700;
         }
-        .avail-note {
-          font-size: 0.88rem;
-          color: var(--text-muted);
-          margin-bottom: 1.25rem;
-        }
+        .avail-note { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.25rem; }
         .stay-sidebar {
           position: sticky;
           top: 5rem;
@@ -137,11 +129,7 @@ export default function StayPage() {
           font-size: 1.5rem;
           margin-bottom: 0.35rem;
         }
-        .stay-sidebar-note p {
-          font-size: 0.82rem;
-          color: var(--text-muted);
-          margin-bottom: 1rem;
-        }
+        .stay-sidebar-note p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem; }
         @media (max-width: 900px) {
           .stay-layout { grid-template-columns: 1fr; }
           .stay-sidebar { position: static; }

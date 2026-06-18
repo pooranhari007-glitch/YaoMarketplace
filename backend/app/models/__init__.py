@@ -1,3 +1,5 @@
+from app.models.media import MediaAsset
+from app.models.settings import SiteSetting
 from app.models.booking import Booking, BookingType, BookingStatus
 from app.models.content import ContentPage, PageSlug
 from app.models.inquiry import Inquiry
@@ -8,6 +10,8 @@ from app.models.calendar import BlockedDate, ExternalCalendar
 
 __all__ = [
     "AdminUser",
+    "MediaAsset",
+    "SiteSetting",
     "Booking",
     "BookingType",
     "BookingStatus",
